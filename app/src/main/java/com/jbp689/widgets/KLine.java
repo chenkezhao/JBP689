@@ -102,18 +102,20 @@ public class KLine extends View{
 //        paint.setARGB(255,255,0,0);
         paint.setColor(kLineColor);
 
+        int screenWidth = JBPApplication.getInstance().getScreenWidth();
+        int startPositionXY =50;
+        int viewHeight = this.getHeight();
         //线
-        canvas.drawLine(JBPApplication.getInstance().getScreenWidth()/2, 0, JBPApplication.getInstance().getScreenWidth()/2, this.getHeight(), paint);
+        canvas.drawLine(screenWidth/2, 0, screenWidth/2, viewHeight, paint);
         //矩形
-
         DecimalFormat df = new DecimalFormat("#");
-        int top = Integer.parseInt(df.format((upVolume*1.0/totalVolume)*this.getHeight()));
-        int bottom = Integer.parseInt(df.format(((upVolume+middleVolume)*1.0/totalVolume)*this.getHeight()));
-        canvas.drawRect(new Rect((JBPApplication.getInstance().getScreenWidth()/2)-50, top, (JBPApplication.getInstance().getScreenWidth()/2)+50, bottom),paint);
+        int top = Integer.parseInt(df.format((upVolume*1.0/totalVolume)*viewHeight));
+        int bottom = Integer.parseInt(df.format(((upVolume+middleVolume)*1.0/totalVolume)*viewHeight));
+        canvas.drawRect(new Rect((screenWidth/2)-50, top, (screenWidth/2)+50, bottom),paint);
         //绘制描述线
-        canvas.drawLine(JBPApplication.getInstance().getScreenWidth()/2,top/2,JBPApplication.getInstance().getScreenWidth()/4,top/2, paint);
-        canvas.drawLine(JBPApplication.getInstance().getScreenWidth()/2-50,bottom-((bottom-top)/2),JBPApplication.getInstance().getScreenWidth()/4,bottom-((bottom-top)/2), paint);
-        canvas.drawLine(JBPApplication.getInstance().getScreenWidth()/2,this.getHeight()-((this.getHeight()-bottom)/2),JBPApplication.getInstance().getScreenWidth()/4,this.getHeight()-((this.getHeight()-bottom)/2), paint);
+        canvas.drawLine(screenWidth/2,top/2,screenWidth/4,top/2+startPositionXY, paint);
+        canvas.drawLine(screenWidth/2+50,bottom-((bottom-top)/2),screenWidth*3/4,bottom-((bottom-top)/2), paint);
+        canvas.drawLine(screenWidth/2,viewHeight-((viewHeight-bottom)/2),screenWidth/4,viewHeight-((viewHeight-bottom)/2)-startPositionXY, paint);
         //绘制文字
         TextPaint textPaint = new TextPaint(paint);
         textPaint.setAlpha(255);
@@ -121,9 +123,9 @@ public class KLine extends View{
         textPaint.setColor(kLineColor);
         textPaint.setTextAlign(Paint.Align.CENTER);
         DecimalFormat df1 = new DecimalFormat("0.00");
-        canvas.drawText(df1.format(upVolume*100.0/totalVolume)+"%", JBPApplication.getInstance().getScreenWidth()/4,top/2, textPaint);
-        canvas.drawText(df1.format(middleVolume*100.0/totalVolume)+"%", JBPApplication.getInstance().getScreenWidth()/4,bottom-((bottom-top)/2), textPaint);
-        canvas.drawText(df1.format(downVolume*100.0/totalVolume)+"%", JBPApplication.getInstance().getScreenWidth()/4,this.getHeight()-((this.getHeight()-bottom)/2), textPaint);
+        canvas.drawText(df1.format(upVolume*100.0/totalVolume)+"%", screenWidth/4,top/2+startPositionXY, textPaint);
+        canvas.drawText(df1.format(middleVolume*100.0/totalVolume)+"%", screenWidth*3/4,bottom-((bottom-top)/2), textPaint);
+        canvas.drawText(df1.format(downVolume*100.0/totalVolume)+"%", screenWidth/4,viewHeight-((viewHeight-bottom)/2)-startPositionXY, textPaint);
     }
 
     public long getTotalVolume() {

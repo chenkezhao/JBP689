@@ -20,7 +20,7 @@ public class ResultActivity extends AppCompatActivity {
     private TextView upVolume;
     private TextView middleVolume;
     private TextView downVolume;
-    private TextView flag;
+    private TextView date;
     private com.jbp689.widgets.KLine wkLine;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class ResultActivity extends AppCompatActivity {
         upVolume = (TextView) findViewById(R.id.tv_upVolume);
         middleVolume = (TextView) findViewById(R.id.tv_middleVolume);
         downVolume = (TextView) findViewById(R.id.tv_downVolume);
-        flag = (TextView) findViewById(R.id.tv_flag);
+        date = (TextView) findViewById(R.id.tv_date);
         wkLine = (com.jbp689.widgets.KLine)findViewById(R.id.w_kLine);
     }
 
@@ -47,29 +47,29 @@ public class ResultActivity extends AppCompatActivity {
         if(mKLine!=null){
             DecimalFormat df = new DecimalFormat("0.00");
             if(mKLine.isRed()){
-                flag.setText("...阳线..");
-                totalVolume.setText("总成交量："+mKLine.getTotalVolume()+"（100%）");
-                upVolume.setText("收盘价->最高价 成交量（上）："+mKLine.getUpVolume()+"（"+df.format(mKLine.getUpVolume()*100.0/mKLine.getTotalVolume())+"%）");
-                middleVolume.setText("收盘价->开盘价 成交量（中）："+mKLine.getMiddleVolume()+"（"+df.format(mKLine.getMiddleVolume()*100.0/mKLine.getTotalVolume())+"%）");
-                downVolume.setText("开盘价->最低价 成交量（下）："+mKLine.getDownVolume()+"（"+df.format(mKLine.getDownVolume()*100.0/mKLine.getTotalVolume())+"%）");
+                date.setText(mKLine.getDate());
+                totalVolume.setText("总成交量(股)："+mKLine.getTotalVolume()+"（100%）");
+                upVolume.setText("收盘价->最高价 成交量(股)-上："+mKLine.getUpVolume()+"（"+df.format(mKLine.getUpVolume()*100.0/mKLine.getTotalVolume())+"%）");
+                middleVolume.setText("收盘价->开盘价 成交量(股)-中："+mKLine.getMiddleVolume()+"（"+df.format(mKLine.getMiddleVolume()*100.0/mKLine.getTotalVolume())+"%）");
+                downVolume.setText("开盘价->最低价 成交量(股)-下："+mKLine.getDownVolume()+"（"+df.format(mKLine.getDownVolume()*100.0/mKLine.getTotalVolume())+"%）");
                 totalVolume.setTextColor(0xffff0000);
                 upVolume.setTextColor(0xffff0000);
                 middleVolume.setTextColor(0xffff0000);
                 downVolume.setTextColor(0xffff0000);
-                flag.setTextColor(0xffff0000);
+                date.setTextColor(0xffff0000);
                 wkLine.setkLineColor(0xffff0000);
             }else{
-                flag.setText("...阴线..");
-                totalVolume.setText("总成交量："+mKLine.getTotalVolume()+"（100%）");
-                upVolume.setText("开盘价->最高价 成交量(上)："+mKLine.getUpVolume()+"（"+df.format(mKLine.getUpVolume()*100.0/mKLine.getTotalVolume())+"%）");
-                middleVolume.setText("开盘价->收盘价 成交量(中)："+mKLine.getMiddleVolume()+"（"+df.format(mKLine.getMiddleVolume()*100.0/mKLine.getTotalVolume())+"%）");
-                downVolume.setText("收盘价->最低价 成交量(下)："+mKLine.getDownVolume()+"（"+df.format(mKLine.getDownVolume()*100.0/mKLine.getTotalVolume())+"%）");
-                totalVolume.setTextColor(0xff00ff00);
-                upVolume.setTextColor(0xff00ff00);
-                middleVolume.setTextColor(0xff00ff00);
-                downVolume.setTextColor(0xff00ff00);
-                flag.setTextColor(0xff00ff00);
-                wkLine.setkLineColor(0xff00ff00);
+                date.setText(mKLine.getDate());
+                totalVolume.setText("总成交量(股)："+mKLine.getTotalVolume()+"（100%）");
+                upVolume.setText("开盘价->最高价 成交量(股)-上："+mKLine.getUpVolume()+"（"+df.format(mKLine.getUpVolume()*100.0/mKLine.getTotalVolume())+"%）");
+                middleVolume.setText("开盘价->收盘价 成交量(股)-中："+mKLine.getMiddleVolume()+"（"+df.format(mKLine.getMiddleVolume()*100.0/mKLine.getTotalVolume())+"%）");
+                downVolume.setText("收盘价->最低价 成交量(股)-下："+mKLine.getDownVolume()+"（"+df.format(mKLine.getDownVolume()*100.0/mKLine.getTotalVolume())+"%）");
+                totalVolume.setTextColor(0xFF005A00);
+                upVolume.setTextColor(0xFF005A00);
+                middleVolume.setTextColor(0xFF005A00);
+                downVolume.setTextColor(0xFF005A00);
+                date.setTextColor(0xFF005A00);
+                wkLine.setkLineColor(0xFF005A00);
             }
             wkLine.setTotalVolume(mKLine.getTotalVolume());
             wkLine.setUpVolume(mKLine.getUpVolume());

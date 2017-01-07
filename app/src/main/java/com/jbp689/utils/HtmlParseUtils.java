@@ -32,7 +32,7 @@ public class HtmlParseUtils {
 			double price = Double.parseDouble(tr.child(0).text().trim());
 			// 成交量（股）
 			long volume = Long.parseLong(tr.child(1).text().trim());
-
+            totalVolume += volume;
             if(kLine.isRed()){
                 //阳线
                 if (price <= td.getCurrentPrice() && price > td.getOpenPrice()) {
@@ -57,7 +57,6 @@ public class HtmlParseUtils {
                     downVolume+=volume;
                 }
             }
-			totalVolume += volume;
 		}
 
         kLine.setUpVolume(upVolume);

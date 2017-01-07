@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
 
     Button btnAnalysis;
     TextInputEditText etcode;
-//    private ProgressDialog progressDialog;
     private VolleyUtils mVolleyUtils;
 
     @Override
@@ -67,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
                 // 现在创建 matcher 对象
                 Matcher m = r.matcher(code);
                 if (m.find()) {
-//                    progressDialog = ProgressDialog.show(MainActivity.this, "系统提示", "数据分析中...", true, false);
                     MessageUtils.getInstance().showProgressDialog(MainActivity.this,"系统提示", "数据分析中...");
                     getTransactionDetail(code);
                 }else{
@@ -97,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 td.setCurrentPrice(Double.parseDouble(arr[3]));
                 td.setHighPrice(Double.parseDouble(arr[4]));
                 td.setLowestPrice(Double.parseDouble(arr[5]));
-                td.setDate(arr[30]+arr[31]);
+                td.setDate(arr[30]+" "+arr[31]);
                 start(td,code);
             }
         });
@@ -111,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
                 byte[] b = response.getBytes(Charset.forName("utf-8"));
                 String html = new String(b);
                 KLine kLine = new HtmlParseUtils().parseKLine(html,td,new KLine(code));
-//                progressDialog.dismiss();
                 MessageUtils.getInstance().closeProgressDialog();
                 Intent intent = new Intent(MainActivity.this,ResultActivity.class);
                 Bundle bundle = new Bundle();
