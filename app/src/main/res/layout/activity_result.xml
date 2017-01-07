@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_result"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.jbp689.activity.ResultActivity"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/tv_flag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="...涨..."
+        android:textSize="50px"
+        android:textColor="@color/red"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_margin="24px"/>
+    <TextView
+        android:id="@+id/tv_totalVolume"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="总成交量：1000万（100%）"/>
+    <TextView
+        android:id="@+id/tv_upVolume"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="开盘价->最低价 成交量：200万（20%）"/>
+
+    <TextView
+        android:id="@+id/tv_middleVolume"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="收盘价->最高价 成交量：400万（40%）"/>
+
+    <TextView
+        android:id="@+id/tv_downVolume"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="开盘价->收盘价 成交量：400万（40%）"/>
+
+    <com.jbp689.widgets.KLine
+        android:id="@+id/w_kLine"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="100px">
+
+    </com.jbp689.widgets.KLine>
+</com.zhy.autolayout.AutoLinearLayout>

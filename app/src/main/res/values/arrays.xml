@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="KLine">
+        <attr name="totalVolume" format="integer"></attr>
+        <attr name="upVolume" format="integer"></attr>
+        <attr name="middleVolume" format="integer"></attr>
+        <attr name="downVolume" format="integer"></attr>
+        <attr name="kLineColor" format="integer"></attr>
+    </declare-styleable>
+</resources>
