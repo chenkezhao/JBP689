@@ -1,12 +1,13 @@
 package com.jbp689.activity;
 
-import android.app.ProgressDialog;
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
@@ -20,15 +21,21 @@ import com.jbp689.utils.MessageUtils;
 import com.jbp689.utils.StringUtils;
 import com.jbp689.utils.VolleyUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.nio.charset.Charset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     Button btnAnalysis;
     TextInputEditText etcode;
     private VolleyUtils mVolleyUtils;
+    private String mCode;
+    private String mDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,14 +67,18 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 //验证模板
-                String pattern = "(sh|sz)[0-9]{6}";
+                String pattern = "^(sh|sz)[0-9]{6}$";
                 // 创建 Pattern 对象
                 Pattern r = Pattern.compile(pattern);
                 // 现在创建 matcher 对象
                 Matcher m = r.matcher(code);
                 if (m.find()) {
-                    MessageUtils.getInstance().showProgressDialog(MainActivity.this,"系统提示", "数据分析中...");
-                    getTransactionDetail(code);
+                    MessageUtils.getInstance().showProgressDialog(MainActivity.this,"系统提示", "数据下载分析中...");
+                    mCode = code;
+                    mDate = "2017-01-06";
+//                  getTransactionDetail(code);//方式一
+//                  new HtmlParseUtils().parseTradeHistory(new KLine(code),"2017-01-06");//方式二
+                    queryTradeHistory(code,mDate);//方式三
                 }else{
                     etcode.setError("输入格式不正确！");
                     return;
@@ -77,6 +88,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * 获取最新股票明细信息
+     * @param code
+     */
     private void getTransactionDetail(final String code){
         String url = "http://hq.sinajs.cn/list="+code;
         mVolleyUtils.stringRequest(url, new Response.Listener<String>() {
@@ -101,6 +116,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 获取最新分价表
+     * @param td
+     * @param code
+     */
     private void start(final TransactionDetail td, final String code){
         String url = "http://vip.stock.finance.sina.com.cn/quotes_service/view/cn_price.php?symbol="+code;
         mVolleyUtils.stringRequest(url, new Response.Listener<String>() {
@@ -117,5 +137,79 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(KLine kLine) {
+        MessageUtils.getInstance().closeProgressDialog();
+        if(StringUtils.isBlank(kLine.getCode())){
+            MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(MainActivity.this),"该股票代码不存在！");
+            return;
+        }
+        Intent intent = new Intent(MainActivity.this,ResultActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("kLine", kLine);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+
+
+
+    final private int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 123;
+    private void queryTradeHistory(String code,String date) {
+        if(android.os.Build.VERSION.SDK_INT>=23){
+            checkPermission();
+        }
+        new HtmlParseUtils().parseTradeHistory(code,date);
+    }
+
+    @TargetApi(23)
+    private void checkPermission(){
+        int hasWriteContactsPermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED) {
+            if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                MessageUtils.getInstance().showAlertDialog(this, "系统提示", "如果不赋予程序任何权限，程序将不会运行！", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                REQUEST_CODE_WRITE_EXTERNAL_STORAGE);
+                    }
+                });
+                return;
+            }
+            requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_CODE_WRITE_EXTERNAL_STORAGE);
+            return;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_WRITE_EXTERNAL_STORAGE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+                    new HtmlParseUtils().parseTradeHistory(mCode,mDate);
+                } else {
+                    // Permission Denied
+                    MessageUtils.getInstance().closeProgressDialog();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 }

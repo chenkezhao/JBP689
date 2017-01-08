@@ -2,7 +2,9 @@ package com.jbp689.utils;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 
 import com.jbp689.JBPApplication;
@@ -14,7 +16,7 @@ import com.jbp689.JBPApplication;
 
 public class MessageUtils {
 
-    private static ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
     public static MessageUtils messageUtils;
     private MessageUtils(){
     }
@@ -51,5 +53,41 @@ public class MessageUtils {
         if(progressDialog!=null){
             progressDialog.dismiss();
         }
+    }
+
+    public ProgressDialog getProgressDialog() {
+        return progressDialog;
+    }
+
+    public void setProgressDialog(ProgressDialog progressDialog) {
+        this.progressDialog = progressDialog;
+    }
+
+    public AlertDialog.Builder getAlertDialogBuilder(Context ctx){
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        return builder;
+    }
+    /**
+     *
+     * @param ctx
+     * @param title
+     * @param msg
+     */
+    public void showAlertDialog(Context ctx, String title, String msg) {
+        AlertDialog dialog = getAlertDialogBuilder(ctx).setTitle(title).setMessage(msg)
+                .setPositiveButton("确定", null).show();
+    }
+
+
+    /**
+     *
+     * @param ctx
+     * @param title
+     * @param msg
+     */
+    public void showAlertDialog(Context ctx, String title, String msg,
+                                       DialogInterface.OnClickListener onClickListener) {
+        AlertDialog dialog  =getAlertDialogBuilder(ctx).setTitle(title).setMessage(msg)
+                .setPositiveButton("确定", onClickListener).show();
     }
 }

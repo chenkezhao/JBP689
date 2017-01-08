@@ -10,7 +10,7 @@ import android.webkit.WebViewClient;
 
 import com.jbp689.R;
 
-public class HelpActivity extends AppCompatActivity {
+public class HelpActivity extends BaseActivity {
 
     private WebView webHelp;
     @Override

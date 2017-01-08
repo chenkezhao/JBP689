@@ -1,17 +1,28 @@
 package com.jbp689;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+
+import org.xutils.x;
+
+import java.io.File;
 
 /**
  * Created by Administrator on 2017/1/7.
  */
 
 public class JBPApplication extends Application {
+	private static final int MY_PERMISSIONS_REQUEST = 1;
 	private static JBPApplication instance;
 
 	public static JBPApplication getInstance() {
@@ -22,6 +33,8 @@ public class JBPApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 		this.instance = JBPApplication.this;
+		x.Ext.init(this);
+//		x.Ext.setDebug(BuildConfig.DEBUG); // 是否输出debug日志, 开启debug会影响性能.
 	}
 
 	/**
@@ -48,5 +61,49 @@ public class JBPApplication extends Application {
 
 	public View getRootView(Activity context) {
 		return ((ViewGroup) context.findViewById(android.R.id.content)).getChildAt(0);
+	}
+
+	/***
+	 * 获取用户数据文件夹
+	 *
+	 * @return
+	 */
+	public File getUserHomePath() {
+		String dataPath = getSdCardPath() + File.separator+ getPackageName() +  File.separator;
+		File dataPathFile = new File(dataPath);
+		if (!dataPathFile.exists()) {
+			dataPathFile.mkdirs();
+		}
+		return dataPathFile;
+	}
+
+
+	/**
+	 * 判断sd卡是否存在
+	 *
+	 * @return
+	 */
+	public boolean isExistSdCard() {
+		boolean sdCardExist = Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED); //
+		return sdCardExist;
+	}
+	/**
+	 * 获取SD卡路径
+	 *
+	 * @return
+	 */
+	public String getSdCardPath() {
+		File sdDir = null;
+		if (isExistSdCard()) {
+			sdDir = Environment.getExternalStorageDirectory();// 获取根目录
+			return sdDir.toString();
+		} else {
+			return null;
+		}
+	}
+
+	public void exit() {
+		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 }

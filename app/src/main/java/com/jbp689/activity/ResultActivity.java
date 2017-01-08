@@ -13,7 +13,7 @@ import com.jbp689.entity.KLine;
 
 import java.text.DecimalFormat;
 
-public class ResultActivity extends AppCompatActivity {
+public class ResultActivity extends BaseActivity {
 
     private KLine mKLine;
     private TextView totalVolume;

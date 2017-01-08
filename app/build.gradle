@@ -20,15 +20,19 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.1.0'
     testCompile 'junit:junit:4.12'
     compile 'com.zhy:autolayout:1.4.5'
-    compile 'com.android.support:design:25.0.1'
+    compile 'com.android.support:design:25.1.0'
     /*https://github.com/smanikandan14/Volley-demo*/
     compile 'com.mcxiaoke.volley:library:1.0.19'
-    compile 'org.jsoup:jsoup:1.8.3'/*HTML解析*/
+    compile 'org.jsoup:jsoup:1.8.3'
+    /*HTML解析*/
+    compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'org.xutils:xutils:3.3.40'
+    compile files('libs/jxl.jar')
 }

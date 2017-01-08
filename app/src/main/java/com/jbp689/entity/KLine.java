@@ -21,6 +21,10 @@ public class KLine implements Serializable {
 	public KLine(String code) {
 		this.code = code;
 	}
+	public KLine(boolean isRed) {
+		this.isRed = isRed;
+	}
+
 
 	public String getCode() {
 		return code;
