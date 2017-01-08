@@ -48,10 +48,10 @@ public class ResultActivity extends BaseActivity {
             DecimalFormat df = new DecimalFormat("0.00");
             if(mKLine.isRed()){
                 date.setText(mKLine.getDate());
-                totalVolume.setText("总成交量(股)："+mKLine.getTotalVolume()+"（100%）");
-                upVolume.setText("收盘价->最高价 成交量(股)-上："+mKLine.getUpVolume()+"（"+df.format(mKLine.getUpVolume()*100.0/mKLine.getTotalVolume())+"%）");
-                middleVolume.setText("收盘价->开盘价 成交量(股)-中："+mKLine.getMiddleVolume()+"（"+df.format(mKLine.getMiddleVolume()*100.0/mKLine.getTotalVolume())+"%）");
-                downVolume.setText("开盘价->最低价 成交量(股)-下："+mKLine.getDownVolume()+"（"+df.format(mKLine.getDownVolume()*100.0/mKLine.getTotalVolume())+"%）");
+                totalVolume.setText("总成交量(手)："+mKLine.getTotalVolume()+"（100%）");
+                upVolume.setText("收盘价->最高价 成交量(手)-上："+mKLine.getUpVolume()+"（"+df.format(mKLine.getUpVolume()*100.0/mKLine.getTotalVolume())+"%）");
+                middleVolume.setText("收盘价->开盘价 成交量(手)-中："+mKLine.getMiddleVolume()+"（"+df.format(mKLine.getMiddleVolume()*100.0/mKLine.getTotalVolume())+"%）");
+                downVolume.setText("开盘价->最低价 成交量(手)-下："+mKLine.getDownVolume()+"（"+df.format(mKLine.getDownVolume()*100.0/mKLine.getTotalVolume())+"%）");
                 totalVolume.setTextColor(0xffff0000);
                 upVolume.setTextColor(0xffff0000);
                 middleVolume.setTextColor(0xffff0000);
@@ -60,10 +60,10 @@ public class ResultActivity extends BaseActivity {
                 wkLine.setkLineColor(0xffff0000);
             }else{
                 date.setText(mKLine.getDate());
-                totalVolume.setText("总成交量(股)："+mKLine.getTotalVolume()+"（100%）");
-                upVolume.setText("开盘价->最高价 成交量(股)-上："+mKLine.getUpVolume()+"（"+df.format(mKLine.getUpVolume()*100.0/mKLine.getTotalVolume())+"%）");
-                middleVolume.setText("开盘价->收盘价 成交量(股)-中："+mKLine.getMiddleVolume()+"（"+df.format(mKLine.getMiddleVolume()*100.0/mKLine.getTotalVolume())+"%）");
-                downVolume.setText("收盘价->最低价 成交量(股)-下："+mKLine.getDownVolume()+"（"+df.format(mKLine.getDownVolume()*100.0/mKLine.getTotalVolume())+"%）");
+                totalVolume.setText("总成交量(手)："+mKLine.getTotalVolume()+"（100%）");
+                upVolume.setText("开盘价->最高价 成交量(手)-上："+mKLine.getUpVolume()+"（"+df.format(mKLine.getUpVolume()*100.0/mKLine.getTotalVolume())+"%）");
+                middleVolume.setText("开盘价->收盘价 成交量(手)-中："+mKLine.getMiddleVolume()+"（"+df.format(mKLine.getMiddleVolume()*100.0/mKLine.getTotalVolume())+"%）");
+                downVolume.setText("收盘价->最低价 成交量(手)-下："+mKLine.getDownVolume()+"（"+df.format(mKLine.getDownVolume()*100.0/mKLine.getTotalVolume())+"%）");
                 totalVolume.setTextColor(0xFF005A00);
                 upVolume.setTextColor(0xFF005A00);
                 middleVolume.setTextColor(0xFF005A00);
