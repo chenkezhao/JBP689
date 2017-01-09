@@ -18,12 +18,14 @@ import com.jbp689.utils.CommonUtils;
 import com.jbp689.utils.HtmlParseUtils;
 import com.jbp689.utils.MessageUtils;
 import com.jbp689.utils.StringUtils;
+import com.jbp689.utils.VolleyUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class ResultActivity extends BaseActivity {
     private KLine mKLine;
@@ -37,10 +39,14 @@ public class ResultActivity extends BaseActivity {
     private int year, month, day;
     private final int CALENDAR_ID=689;
     private String mDate;
+    private VolleyUtils mVolleyUtils;
+    private HtmlParseUtils mHtmlParseUtils;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
+        mVolleyUtils = new VolleyUtils(this);
+        mHtmlParseUtils = new HtmlParseUtils();
         Intent intent = this.getIntent();
         mKLine = (KLine) intent.getSerializableExtra("kLine");
         initActionBar(mKLine);
@@ -81,13 +87,29 @@ public class ResultActivity extends BaseActivity {
                                       int arg1, int arg2, int arg3) {
                     // TODO Auto-generated method stub
                     // arg1 = year, arg2 = month, arg3 = day
+                    MessageUtils.getInstance().showProgressDialog(ResultActivity.this,"系统提示","数据下载分析中...");
                     String date = arg1+"-"+(arg2+1)+"-"+arg3 ;
                     mDate = CommonUtils.dateToStringFormat(date);
-                    new HtmlParseUtils().parseTradeHistory(mKLine.getCode(),mDate,null);//方式三
+                    queryTradeHistory(mKLine.getCode(),mDate);//方式三
                 }
             }, year, month, day);
         }
         return null;
+    }
+
+    /**
+     * 方式三
+     * @param code
+     * @return
+     */
+    private void queryTradeHistory(final String code, final String date){
+        if(CommonUtils.dateToStringFormat(new Date()).equals(date)){
+            //今日
+            mVolleyUtils.getTransactionDetail(code);//方式一
+        }else{
+            //历史
+            mHtmlParseUtils.parseTradeHistory(code,date,null);
+        }
     }
 
     private void setKLineData(KLine mKLine){
