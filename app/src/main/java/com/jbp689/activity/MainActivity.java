@@ -1,13 +1,8 @@
 package com.jbp689.activity;
 
-import android.Manifest;
-import android.annotation.TargetApi;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
-import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.widget.Button;
 
@@ -22,10 +17,6 @@ import com.jbp689.utils.MessageUtils;
 import com.jbp689.utils.StringUtils;
 import com.jbp689.utils.VolleyUtils;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -38,28 +29,21 @@ public class MainActivity extends BaseActivity {
     private VolleyUtils mVolleyUtils;
     private String mCode;
     private String mDate;
-    final private int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 123;
+    private HtmlParseUtils mHtmlParseUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initActonBar();
+        mHtmlParseUtils = new HtmlParseUtils();
+        setMainHomeUp();
+        setSubtitle("sh:上海上市的股票，sz:深圳上市的股票");
         mVolleyUtils = new VolleyUtils(MainActivity.this);
         initView();
-        initEnvent();
-    }
-    private void initActonBar(){
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar!=null){
-            actionBar.setSubtitle("sh:上海上市的股票，sz:深圳上市的股票");
-        }
     }
     private void initView(){
         btnAnalysis = (Button) findViewById(R.id.btn_analysis);
         etcode = (TextInputEditText) findViewById(R.id.et_code);
-    }
-    private void initEnvent(){
         btnAnalysis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,8 +64,8 @@ public class MainActivity extends BaseActivity {
                     mCode = code;
                     mDate = CommonUtils.dateToStringFormat(new Date());
 //                  getTransactionDetail(code);//方式一
-//                  new HtmlParseUtils().parseTradeHistory(new KLine(code),"2017-01-06");//方式二
-                    queryTradeHistory(code,mDate);//方式三
+//                  nmHtmlParseUtils.parseTradeHistory(new KLine(code),"2017-01-06");//方式二
+                    queryTradeHistory(mCode,mDate);//方式三
                 }else{
                     etcode.setError("输入格式不正确！");
                     return;
@@ -98,50 +82,24 @@ public class MainActivity extends BaseActivity {
     private void queryTradeHistory(final String code, final String date){
         if(CommonUtils.dateToStringFormat(new Date()).equals(date)){
             //今日
-//            String url = "http://hq.sinajs.cn/?_="+new Date().getTime()+"&list="+code;
-//            mVolleyUtils.stringRequest(url, new Response.Listener<String>() {
-//                @Override
-//                public void onResponse(String response) {
-//                    String temp =response.substring(response.indexOf("\"")+1,response.lastIndexOf("\""));
-//                    if(temp.trim().length()==0){
-//                        MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(MainActivity.this),"该股票代码不存在！");
-//                        return;
-//                    }
-//                    String[] arr = temp.split(",");
-//                    TransactionDetail td = new TransactionDetail();
-//                    td.setName(arr[0]);
-//                    td.setOpenPrice(Double.parseDouble(arr[1]));
-//                    td.setClosePrice(Double.parseDouble(arr[2]));
-//                    td.setCurrentPrice(Double.parseDouble(arr[3]));
-//                    td.setHighPrice(Double.parseDouble(arr[4]));
-//                    td.setLowestPrice(Double.parseDouble(arr[5]));
-//                    td.setDate(arr[30]);
-//                    startQueryTradeHistory(code,date,td);
-//                }
-//            });
             getTransactionDetail(code);//方式一
         }else{
             //历史
             startQueryTradeHistory(code,date,null);
         }
     }
-
-
     /**
      * 启动方法三
      * @param code
      * @param date
      */
     private void startQueryTradeHistory(String code,String date,TransactionDetail td){
-        if(android.os.Build.VERSION.SDK_INT>=23){
-            checkPermission();
-        }
-        new HtmlParseUtils().parseTradeHistory(code,date,td);
+        mHtmlParseUtils.parseTradeHistory(code,date,td);
     }
 
-
     /**
-     * 获取最新股票明细信息
+     * 方式一
+     * 获取最新（今日）股票行情明细
      * @param code
      */
     private void getTransactionDetail(final String code){
@@ -164,24 +122,25 @@ public class MainActivity extends BaseActivity {
                 td.setHighPrice(Double.parseDouble(arr[4]));
                 td.setLowestPrice(Double.parseDouble(arr[5]));
                 td.setDate(/*arr[30]+*/"今日"+arr[31]);
-                start(td,code);
+                startTransactionDetail(td,code);
             }
         });
     }
 
     /**
-     * 获取最新分价表
+     * 启动方法一
+     * 获取最新（今日）分价表
      * @param td
      * @param code
      */
-    private void start(final TransactionDetail td, final String code){
+    private void startTransactionDetail(final TransactionDetail td, final String code){
         String url = "http://vip.stock.finance.sina.com.cn/quotes_service/view/cn_price.php?symbol="+code;
         mVolleyUtils.stringRequest(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 byte[] b = response.getBytes(Charset.forName("utf-8"));
                 String html = new String(b);
-                KLine kLine = new HtmlParseUtils().parseKLine(html,td,new KLine(code));
+                KLine kLine = mHtmlParseUtils.parseKLine(html,td,new KLine(code));
                 MessageUtils.getInstance().closeProgressDialog();
                 Intent intent = new Intent(MainActivity.this,ResultActivity.class);
                 Bundle bundle = new Bundle();
@@ -190,71 +149,5 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(KLine kLine) {
-        MessageUtils.getInstance().closeProgressDialog();
-        if(StringUtils.isBlank(kLine.getCode()) || kLine.getTotalVolume()==0){
-            MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(MainActivity.this),"该股票代码不存在！");
-            return;
-        }
-        Intent intent = new Intent(MainActivity.this,ResultActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("kLine", kLine);
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
-
-
-
-
-    @TargetApi(23)
-    private void checkPermission(){
-        int hasWriteContactsPermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED) {
-            if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                MessageUtils.getInstance().showAlertDialog(this, "系统提示", "如果不赋予程序任何权限，程序将不会运行！", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                REQUEST_CODE_WRITE_EXTERNAL_STORAGE);
-                    }
-                });
-                return;
-            }
-            requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    REQUEST_CODE_WRITE_EXTERNAL_STORAGE);
-            return;
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_WRITE_EXTERNAL_STORAGE:
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission Granted
-                    queryTradeHistory(mCode,mDate);
-                } else {
-                    // Permission Denied
-                    MessageUtils.getInstance().closeProgressDialog();
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
     }
 }

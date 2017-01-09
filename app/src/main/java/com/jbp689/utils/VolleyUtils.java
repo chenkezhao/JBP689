@@ -1,6 +1,5 @@
 package com.jbp689.utils;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.widget.Toast;
 
@@ -15,8 +14,6 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.jbp689.JBPApplication;
-import com.jbp689.activity.MainActivity;
 
 /**
  * volley网络请求框架封装 Created by aaron on 2017/1/6.

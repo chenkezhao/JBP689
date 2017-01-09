@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +19,6 @@ import com.jbp689.utils.HtmlParseUtils;
 import com.jbp689.utils.MessageUtils;
 import com.jbp689.utils.StringUtils;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -28,8 +26,6 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 
 public class ResultActivity extends BaseActivity {
-    final private int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 123;
-
     private KLine mKLine;
     private TextView totalVolume;
     private TextView upVolume;
@@ -38,7 +34,6 @@ public class ResultActivity extends BaseActivity {
     private com.jbp689.widgets.KLine wkLine;
     private String  unit = "手";
     private FloatingActionButton fabChangeDate;
-    private Calendar calendar;
     private int year, month, day;
     private final int CALENDAR_ID=689;
     private String mDate;
@@ -51,7 +46,11 @@ public class ResultActivity extends BaseActivity {
         initActionBar(mKLine);
         initView();
         setKLineData(mKLine);
+    }
 
+    private void initActionBar(KLine mKLine){
+        setTitle(mKLine.getName()+"("+mKLine.getCode()+")");
+        setSubtitle(mKLine.getDate());
     }
 
     private void initView(){
@@ -64,40 +63,32 @@ public class ResultActivity extends BaseActivity {
         fabChangeDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initCalendar();
+                Calendar calendar = Calendar.getInstance();
+                year = calendar.get(Calendar.YEAR);
+                month = calendar.get(Calendar.MONTH);
+                day = calendar.get(Calendar.DAY_OF_MONTH);
+                showDialog(CALENDAR_ID);
             }
         });
-    }
-
-    private void initCalendar(){
-        calendar = Calendar.getInstance();
-        year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
-        day = calendar.get(Calendar.DAY_OF_MONTH);
-        showDialog(CALENDAR_ID);
     }
     @Override
     protected Dialog onCreateDialog(int id) {
         // TODO Auto-generated method stub
         if (id == CALENDAR_ID) {
-            return new DatePickerDialog(this, myDateListener, year, month, day);
-        }
-        return null;
-    }
-    private DatePickerDialog.OnDateSetListener myDateListener = new
-            DatePickerDialog.OnDateSetListener() {
+            return new DatePickerDialog(this, new  DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker arg0,
                                       int arg1, int arg2, int arg3) {
                     // TODO Auto-generated method stub
-                    // arg1 = year
-                    // arg2 = month
-                    // arg3 = day
+                    // arg1 = year, arg2 = month, arg3 = day
                     String date = arg1+"-"+(arg2+1)+"-"+arg3 ;
                     mDate = CommonUtils.dateToStringFormat(date);
-                    new HtmlParseUtils().parseTradeHistory(mKLine.getCode(),date,null);//方式三
+                    new HtmlParseUtils().parseTradeHistory(mKLine.getCode(),mDate,null);//方式三
                 }
-            };
+            }, year, month, day);
+        }
+        return null;
+    }
 
     private void setKLineData(KLine mKLine){
         if(mKLine!=null){
@@ -131,21 +122,10 @@ public class ResultActivity extends BaseActivity {
             wkLine.invalidate();
         }
     }
-    private void initActionBar(KLine mKLine){
-        ActionBar actionbar = getSupportActionBar();
-        if(actionbar!=null){
-            actionbar.setTitle(mKLine.getName()+"("+mKLine.getCode()+")");
-            actionbar.setSubtitle(mKLine.getDate());
-            actionbar.setDisplayHomeAsUpEnabled(true);
-            actionbar.setDisplayShowHomeEnabled(false);
-        }
-    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
             case R.id.help:
                 startActivity(new Intent(ResultActivity.this,HelpActivity.class));
                 return true;
@@ -160,25 +140,11 @@ public class ResultActivity extends BaseActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(KLine kLine) {
         MessageUtils.getInstance().closeProgressDialog();
         if(StringUtils.isBlank(kLine.getCode()) || kLine.getTotalVolume()==0){
-            MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(ResultActivity.this),"该股票代码不存在！");
+            MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(ResultActivity.this),"该股票代码不存在或者当前没数据（不是交易日）！");
             return;
         }
         setKLineData(kLine);

@@ -1,16 +1,13 @@
 package com.jbp689.utils;
 
 import android.widget.Toast;
-
 import com.jbp689.JBPApplication;
 import com.jbp689.entity.KLine;
 import com.jbp689.entity.TransactionDetail;
-
 import org.greenrobot.eventbus.EventBus;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -80,7 +77,7 @@ public class CommonUtils {
 
 
 	/**
-	 * 根据股票代码获取从新浪下载的历史明细excel读取数据
+	 * 根据股票代码获取从新浪下载的历史明细txt读取数据
 	 * @param file 下载的文件
 	 * @param kLine new KLine(isRed)
 	 * @param td TransactionDetail对象
