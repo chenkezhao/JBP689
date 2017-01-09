@@ -11,17 +11,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.jbp689.JBPApplication;
 import com.jbp689.R;
 import com.jbp689.entity.KLine;
 import com.jbp689.utils.CommonUtils;
+import com.jbp689.utils.HtmlParseUtils;
+import com.jbp689.utils.MessageUtils;
+import com.jbp689.utils.StringUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
 
 public class ResultActivity extends BaseActivity {
+    final private int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 123;
 
+    private KLine mKLine;
     private TextView totalVolume;
     private TextView upVolume;
     private TextView middleVolume;
@@ -32,15 +41,16 @@ public class ResultActivity extends BaseActivity {
     private Calendar calendar;
     private int year, month, day;
     private final int CALENDAR_ID=689;
+    private String mDate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
         Intent intent = this.getIntent();
-        KLine kLine = (KLine) intent.getSerializableExtra("kLine");
-        initActionBar(kLine);
+        mKLine = (KLine) intent.getSerializableExtra("kLine");
+        initActionBar(mKLine);
         initView();
-        setKLineData(kLine);
+        setKLineData(mKLine);
 
     }
 
@@ -84,8 +94,8 @@ public class ResultActivity extends BaseActivity {
                     // arg2 = month
                     // arg3 = day
                     String date = arg1+"-"+(arg2+1)+"-"+arg3 ;
-                    Toast.makeText(ResultActivity.this, CommonUtils.dateToStringFormat(date),Toast.LENGTH_LONG).show();
-//                    queryTradeHistory(code,mDate);//方式三
+                    mDate = CommonUtils.dateToStringFormat(date);
+                    new HtmlParseUtils().parseTradeHistory(mKLine.getCode(),date,null);//方式三
                 }
             };
 
@@ -148,5 +158,30 @@ public class ResultActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(KLine kLine) {
+        MessageUtils.getInstance().closeProgressDialog();
+        if(StringUtils.isBlank(kLine.getCode()) || kLine.getTotalVolume()==0){
+            MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(ResultActivity.this),"该股票代码不存在！");
+            return;
+        }
+        setKLineData(kLine);
+        initActionBar(kLine);
     }
 }
