@@ -16,6 +16,7 @@ import com.jbp689.JBPApplication;
 import com.jbp689.R;
 import com.jbp689.entity.KLine;
 import com.jbp689.entity.TransactionDetail;
+import com.jbp689.utils.CommonUtils;
 import com.jbp689.utils.HtmlParseUtils;
 import com.jbp689.utils.MessageUtils;
 import com.jbp689.utils.StringUtils;
@@ -26,6 +27,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.nio.charset.Charset;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,6 +38,7 @@ public class MainActivity extends BaseActivity {
     private VolleyUtils mVolleyUtils;
     private String mCode;
     private String mDate;
+    final private int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +78,7 @@ public class MainActivity extends BaseActivity {
                 if (m.find()) {
                     MessageUtils.getInstance().showProgressDialog(MainActivity.this,"系统提示", "数据下载分析中...");
                     mCode = code;
-                    mDate = "2017-01-06";
+                    mDate = CommonUtils.dateToStringFormat(new Date());
 //                  getTransactionDetail(code);//方式一
 //                  new HtmlParseUtils().parseTradeHistory(new KLine(code),"2017-01-06");//方式二
                     queryTradeHistory(code,mDate);//方式三
@@ -87,13 +90,63 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 方式三
+     * @param code
+     * @return
+     */
+    private void queryTradeHistory(final String code, final String date){
+        if(CommonUtils.dateToStringFormat(new Date()).equals(date)){
+            //今日
+//            String url = "http://hq.sinajs.cn/?_="+new Date().getTime()+"&list="+code;
+//            mVolleyUtils.stringRequest(url, new Response.Listener<String>() {
+//                @Override
+//                public void onResponse(String response) {
+//                    String temp =response.substring(response.indexOf("\"")+1,response.lastIndexOf("\""));
+//                    if(temp.trim().length()==0){
+//                        MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(MainActivity.this),"该股票代码不存在！");
+//                        return;
+//                    }
+//                    String[] arr = temp.split(",");
+//                    TransactionDetail td = new TransactionDetail();
+//                    td.setName(arr[0]);
+//                    td.setOpenPrice(Double.parseDouble(arr[1]));
+//                    td.setClosePrice(Double.parseDouble(arr[2]));
+//                    td.setCurrentPrice(Double.parseDouble(arr[3]));
+//                    td.setHighPrice(Double.parseDouble(arr[4]));
+//                    td.setLowestPrice(Double.parseDouble(arr[5]));
+//                    td.setDate(arr[30]);
+//                    startQueryTradeHistory(code,date,td);
+//                }
+//            });
+            getTransactionDetail(code);//方式一
+        }else{
+            //历史
+            startQueryTradeHistory(code,date,null);
+        }
+    }
+
+
+    /**
+     * 启动方法三
+     * @param code
+     * @param date
+     */
+    private void startQueryTradeHistory(String code,String date,TransactionDetail td){
+        if(android.os.Build.VERSION.SDK_INT>=23){
+            checkPermission();
+        }
+        new HtmlParseUtils().parseTradeHistory(code,date,td);
+    }
+
 
     /**
      * 获取最新股票明细信息
      * @param code
      */
     private void getTransactionDetail(final String code){
-        String url = "http://hq.sinajs.cn/list="+code;
+//        String url = "http://hq.sinajs.cn/list="+code;
+        String url = "http://hq.sinajs.cn/?_="+new Date().getTime()+"&list="+code;
         mVolleyUtils.stringRequest(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -110,7 +163,7 @@ public class MainActivity extends BaseActivity {
                 td.setCurrentPrice(Double.parseDouble(arr[3]));
                 td.setHighPrice(Double.parseDouble(arr[4]));
                 td.setLowestPrice(Double.parseDouble(arr[5]));
-                td.setDate(arr[30]+" "+arr[31]);
+                td.setDate(/*arr[30]+*/"今日"+arr[31]);
                 start(td,code);
             }
         });
@@ -153,7 +206,7 @@ public class MainActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(KLine kLine) {
         MessageUtils.getInstance().closeProgressDialog();
-        if(StringUtils.isBlank(kLine.getCode())){
+        if(StringUtils.isBlank(kLine.getCode()) || kLine.getTotalVolume()==0){
             MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(MainActivity.this),"该股票代码不存在！");
             return;
         }
@@ -166,14 +219,6 @@ public class MainActivity extends BaseActivity {
 
 
 
-
-    final private int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 123;
-    private void queryTradeHistory(String code,String date) {
-        if(android.os.Build.VERSION.SDK_INT>=23){
-            checkPermission();
-        }
-        new HtmlParseUtils().parseTradeHistory(code,date);
-    }
 
     @TargetApi(23)
     private void checkPermission(){
@@ -202,7 +247,7 @@ public class MainActivity extends BaseActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission Granted
-                    new HtmlParseUtils().parseTradeHistory(mCode,mDate);
+                    queryTradeHistory(mCode,mDate);
                 } else {
                     // Permission Denied
                     MessageUtils.getInstance().closeProgressDialog();

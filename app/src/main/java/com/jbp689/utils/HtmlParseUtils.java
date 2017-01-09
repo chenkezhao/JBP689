@@ -204,10 +204,10 @@ public class HtmlParseUtils {
             downVolume+=k.getDownVolume();
         }
         //1手=100股
-        kLine.setUpVolume(upVolume*100);
-        kLine.setMiddleVolume(middleVolume*100);
-        kLine.setDownVolume(downVolume*100);
-        kLine.setTotalVolume(totalVolume*100);
+        kLine.setUpVolume(upVolume/100);
+        kLine.setMiddleVolume(middleVolume/100);
+        kLine.setDownVolume(downVolume/100);
+        kLine.setTotalVolume(totalVolume/100);
         EventBus.getDefault().post(kLine);
     }
 
@@ -219,31 +219,36 @@ public class HtmlParseUtils {
      * http://vip.stock.finance.sina.com.cn/quotes_service/view/vMS_tradehistory.php?symbol=sz002259&date=2017-01-06&page=1
      * @return
      */
-    public void parseTradeHistory(final String code, final String date){
+    public void parseTradeHistory(final String code, final String date,final TransactionDetail transactionDetail){
         final String url = "http://vip.stock.finance.sina.com.cn/quotes_service/view/vMS_tradehistory.php?symbol="+code+"&date="+date+"&page=1";
         volleyUtils.stringRequest(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 byte[] b = response.getBytes(Charset.forName("utf-8"));
                 Document doc = Jsoup.parse(new String(b));
-                if(td==null){
-                    td = new TransactionDetail();
-                }
                 Element detail = doc.select("div#quote_area").first();
-                Elements detailTrs = detail.child(1).select("table>tbody>tr");
-                if(detailTrs.isEmpty()){
-                    return;
-                }
                 String name = doc.select("html>head>title").text().trim();
                 name = name.substring(0,name.indexOf("("));
-                td.setName(/*doc.select("h1#stockName").text().trim()*/name);
-                td.setCode(code);
-                td.setCurrentPrice(Double.parseDouble(detailTrs.get(0).child(1).text().trim()));
-                td.setClosePrice(Double.parseDouble(detailTrs.get(2).child(1).text().trim()));
-                td.setOpenPrice(Double.parseDouble(detailTrs.get(3).child(1).text().trim()));
-                td.setHighPrice(Double.parseDouble(detailTrs.get(4).child(1).text().trim()));
-                td.setLowestPrice(Double.parseDouble(detailTrs.get(5).child(1).text().trim()));
-                td.setDate(date);
+                if(transactionDetail!=null){
+                    //今日当前行情
+                    td = transactionDetail;
+                    td.setCode(code);
+                }else{
+                    td = new TransactionDetail();
+                    //历史
+                    Elements detailTrs = detail.child(1).select("table>tbody>tr");
+                    if(detailTrs.isEmpty()){
+                        return;
+                    }
+                    td.setName(/*doc.select("h1#stockName").text().trim()*/name);
+                    td.setCode(code);
+                    td.setDate(date);
+                    td.setCurrentPrice(Double.parseDouble(detailTrs.get(0).child(1).text().trim()));
+                    td.setClosePrice(Double.parseDouble(detailTrs.get(2).child(1).text().trim()));
+                    td.setOpenPrice(Double.parseDouble(detailTrs.get(3).child(1).text().trim()));
+                    td.setHighPrice(Double.parseDouble(detailTrs.get(4).child(1).text().trim()));
+                    td.setLowestPrice(Double.parseDouble(detailTrs.get(5).child(1).text().trim()));
+                }
                 //开始统计成交量
                 boolean isRed = true;
                 if(td.getOpenPrice()>td.getCurrentPrice()){

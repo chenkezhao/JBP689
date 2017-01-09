@@ -15,6 +15,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 通用工具类 Created by Administrator on 2017/1/7.
@@ -167,5 +169,27 @@ public class CommonUtils {
 
 		}
 		return new KLine();
+	}
+
+
+	public static String dateToStringFormat(String date){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		try{
+			return sdf.format(sdf.parse(date));
+		}catch (Exception ex){
+			ex.printStackTrace();
+			Toast.makeText(JBPApplication.getInstance(), "异常："+ex.toString(), Toast.LENGTH_LONG).show();
+		}
+		return sdf.format(new Date());
+	}
+	public static String dateToStringFormat(Date date){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		try{
+			return sdf.format(date);
+		}catch (Exception ex){
+			ex.printStackTrace();
+			Toast.makeText(JBPApplication.getInstance(), "异常："+ex.toString(), Toast.LENGTH_LONG).show();
+		}
+		return sdf.format(new Date());
 	}
 }
