@@ -6,6 +6,7 @@ import android.support.design.widget.TextInputEditText;
 import android.view.View;
 import android.widget.Button;
 
+import com.jbp689.JBPApplication;
 import com.jbp689.R;
 import com.jbp689.entity.KLine;
 import com.jbp689.utils.CommonUtils;

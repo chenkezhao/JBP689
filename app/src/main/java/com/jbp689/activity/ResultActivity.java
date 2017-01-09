@@ -49,6 +49,9 @@ public class ResultActivity extends BaseActivity {
         mHtmlParseUtils = new HtmlParseUtils();
         Intent intent = this.getIntent();
         mKLine = (KLine) intent.getSerializableExtra("kLine");
+        if(mKLine.getTotalVolume()==0){
+            MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(ResultActivity.this),"当前没数据（不是交易日或未开盘）");
+        }
         initActionBar(mKLine);
         initView();
         setKLineData(mKLine);
@@ -113,7 +116,7 @@ public class ResultActivity extends BaseActivity {
     }
 
     private void setKLineData(KLine mKLine){
-        if(mKLine!=null){
+        if(mKLine.getTotalVolume()!=0){
             DecimalFormat df = new DecimalFormat("0.00");
             if(mKLine.isRed()){
                 totalVolume.setText("总成交量("+unit+")："+mKLine.getTotalVolume()+"（100%）");
@@ -142,6 +145,9 @@ public class ResultActivity extends BaseActivity {
             wkLine.setDownVolume(mKLine.getDownVolume());
             //View重新调用一次draw
             wkLine.invalidate();
+        }else{
+            totalVolume.setText("今日没数据，请查询历史数据！");
+            totalVolume.setTextColor(0xffff0000);
         }
     }
     @Override

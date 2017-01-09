@@ -94,6 +94,9 @@ public class KLine extends View{
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if(totalVolume==0){
+            return;
+        }
         /*控件使用的油漆（画笔）*/
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 //        paint.setARGB(255,255,0,0);

@@ -16,26 +16,22 @@
         <TextView
             android:id="@+id/tv_totalVolume"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="总成交量：1000万（100%）"/>
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/tv_upVolume"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="开盘价->最低价 成交量：200万（20%）"/>
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/tv_middleVolume"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="收盘价->最高价 成交量：400万（40%）"/>
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/tv_downVolume"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="开盘价->收盘价 成交量：400万（40%）"/>
+            android:layout_height="wrap_content"/>
 
         <com.jbp689.widgets.KLine
             android:id="@+id/w_kLine"
