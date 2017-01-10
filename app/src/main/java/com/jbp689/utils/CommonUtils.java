@@ -2,6 +2,8 @@ package com.jbp689.utils;
 
 import android.widget.Toast;
 import com.jbp689.JBPApplication;
+import com.jbp689.db.dao.KLineDao;
+import com.jbp689.db.dao.TransactionDetailDao;
 import com.jbp689.entity.KLine;
 import com.jbp689.entity.TransactionDetail;
 import org.greenrobot.eventbus.EventBus;
@@ -55,6 +57,9 @@ public class CommonUtils {
 //                KLine kLine = JExcelApiUtils.readSinaTradehistoryXls(result,new KLine(isRed),td);
 				KLine kLine = readSinaTradehistoryTxt(result,new KLine(isRed),td);
                 EventBus.getDefault().post(kLine);
+				//保存历史到数据
+				TransactionDetailDao.getInstance().insert(td);
+				KLineDao.getInstance().insert(kLine);
 			}
 
 			@Override

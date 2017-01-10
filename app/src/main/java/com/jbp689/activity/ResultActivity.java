@@ -17,6 +17,7 @@ import com.codetroopers.betterpickers.calendardatepicker.MonthAdapter;
 import com.codetroopers.betterpickers.datepicker.DatePickerDialogFragment;
 import com.jbp689.JBPApplication;
 import com.jbp689.R;
+import com.jbp689.db.dao.KLineDao;
 import com.jbp689.entity.KLine;
 import com.jbp689.utils.CommonUtils;
 import com.jbp689.utils.HtmlParseUtils;
@@ -149,13 +150,20 @@ public class ResultActivity extends BaseActivity {
      * @param code
      * @return
      */
-    private void queryTradeHistory(final String code, final String date){
+    private void queryTradeHistory(String code, String date){
         if(CommonUtils.dateToStringFormat(new Date()).equals(date)){
             //今日
             mVolleyUtils.getTransactionDetail(code);//方式一
         }else{
-            //历史
-            mHtmlParseUtils.parseTradeHistory(code,date,null);
+            KLine kLine = KLineDao.getInstance().queryKLineIsExist(code,date);
+            if(kLine!=null){
+                //本地
+                setKLineData(kLine);
+                MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(ResultActivity.this),"本地获取历史成交明细！");
+            }else{
+                //历史
+                mHtmlParseUtils.parseTradeHistory(code,date,null);
+            }
         }
     }
 

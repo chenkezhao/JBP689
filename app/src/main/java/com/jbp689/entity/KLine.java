@@ -1,20 +1,29 @@
 package com.jbp689.entity;
 
-import java.io.Serializable;
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
 
 /**
  * K线 Created by aaron on 2017/1/6.
  */
-
-public class KLine implements Serializable {
+@Table(name = "T_KLINE")
+public class KLine extends EntityBase {
+	@Column(name = "NAME")
 	private String	name;			// 股票名称
+	@Column(name = "CODE")
 	private String	code;			// 股票代码
+	@Column(name = "TOTALVOLUME")
 	private long	totalVolume;	// 总成交量
+	@Column(name = "UPVOLUME")
 	private long	upVolume;		// K线上部分
+	@Column(name = "MIDDLEVOLUME")
 	private long	middleVolume;	// K线中间部分
+	@Column(name = "DOWNVOLUME")
 	private long	downVolume;		// K线下部分
+	@Column(name = "ISRED")
 	private boolean	isRed;			// 是否阳线
-	private String	date;			// 日期+时间
+	@Column(name = "DATE")
+	private String	date;			// 日期
 
 	public KLine() {
 	}
