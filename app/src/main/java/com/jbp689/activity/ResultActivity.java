@@ -159,6 +159,7 @@ public class ResultActivity extends BaseActivity {
             if(kLine!=null){
                 //本地
                 setKLineData(kLine);
+                initActionBar(kLine);
                 MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(ResultActivity.this),"本地获取历史成交明细！");
             }else{
                 //历史
