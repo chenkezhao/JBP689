@@ -189,4 +189,14 @@ public class CommonUtils {
 		}
 		return sdf.format(new Date());
 	}
+	public static Date dateToFormat(Date date){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		try{
+			return sdf.parse(sdf.format(date));
+		}catch (Exception ex){
+			ex.printStackTrace();
+			Toast.makeText(JBPApplication.getInstance(), "异常："+ex.toString(), Toast.LENGTH_LONG).show();
+		}
+		return null;
+	}
 }

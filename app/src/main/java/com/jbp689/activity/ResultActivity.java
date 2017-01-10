@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
+import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
+import com.codetroopers.betterpickers.calendardatepicker.MonthAdapter;
 import com.jbp689.JBPApplication;
 import com.jbp689.R;
 import com.jbp689.entity.KLine;
@@ -28,6 +30,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class ResultActivity extends BaseActivity {
+    private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
     private KLine mKLine;
     private TextView totalVolume;
     private TextView upVolume;
@@ -72,11 +75,32 @@ public class ResultActivity extends BaseActivity {
         fabChangeDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar calendar = Calendar.getInstance();
-                year = calendar.get(Calendar.YEAR);
-                month = calendar.get(Calendar.MONTH);
-                day = calendar.get(Calendar.DAY_OF_MONTH);
-                showDialog(CALENDAR_ID);
+//                Calendar calendar = Calendar.getInstance();
+//                year = calendar.get(Calendar.YEAR);
+//                month = calendar.get(Calendar.MONTH);
+//                day = calendar.get(Calendar.DAY_OF_MONTH);
+//                showDialog(CALENDAR_ID);
+
+                Calendar now = Calendar.getInstance();
+                now.add(Calendar.DATE, 1);
+                MonthAdapter.CalendarDay maxDate = new MonthAdapter.CalendarDay(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+                CalendarDatePickerDialogFragment cdp = new CalendarDatePickerDialogFragment()
+                        .setOnDateSetListener(new CalendarDatePickerDialogFragment.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
+                                MessageUtils.getInstance().showProgressDialog(ResultActivity.this,"系统提示","数据下载分析中...");
+                                String date = year+"-"+(monthOfYear+1)+"-"+dayOfMonth ;
+                                mDate = CommonUtils.dateToStringFormat(date);
+                                queryTradeHistory(mKLine.getCode(),mDate);//方式三
+                            }
+                        })
+                        .setFirstDayOfWeek(Calendar.SUNDAY)
+                        .setPreselectedDate(year, month, day)
+                        .setDateRange(null, maxDate)
+                        .setDoneText("确定")
+                        .setCancelText("取消")
+                        .setThemeLight();
+                cdp.show(getSupportFragmentManager(), FRAG_TAG_DATE_PICKER);
             }
         });
     }

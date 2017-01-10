@@ -30,9 +30,11 @@ dependencies {
     compile 'com.android.support:design:25.1.0'
     /*https://github.com/smanikandan14/Volley-demo*/
     compile 'com.mcxiaoke.volley:library:1.0.19'
-    compile 'org.jsoup:jsoup:1.8.3'
     /*HTML解析*/
+    compile 'org.jsoup:jsoup:1.8.3'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'org.xutils:xutils:3.3.40'
     compile files('libs/jxl.jar')
+    /*日期控件*/
+    compile 'com.code-troopers.betterpickers:library:3.1.0'
 }
