@@ -128,7 +128,7 @@ public class ResultActivity extends BaseActivity {
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH);
         day = calendar.get(Calendar.DAY_OF_MONTH);
-        new DatePickerDialog(this/*,R.style.Custom*/, new  DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog dpd = new DatePickerDialog(this/*,R.style.Custom*/, new  DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker arg0,
                                   int arg1, int arg2, int arg3) {
@@ -139,7 +139,9 @@ public class ResultActivity extends BaseActivity {
                 mDate = CommonUtils.dateToStringFormat(date);
                 queryTradeHistory(mKLine.getCode(),mDate);//方式三
             }
-        }, year, month, day).show();
+        }, year, month, day);
+        dpd.getDatePicker().setMaxDate(new Date().getTime());
+        dpd.show();
     }
 
     /**
