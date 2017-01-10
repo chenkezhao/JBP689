@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.codetroopers.betterpickers.calendardatepicker.MonthAdapter;
+import com.codetroopers.betterpickers.datepicker.DatePickerDialogFragment;
 import com.jbp689.JBPApplication;
 import com.jbp689.R;
 import com.jbp689.entity.KLine;
@@ -39,7 +41,6 @@ public class ResultActivity extends BaseActivity {
     private com.jbp689.widgets.KLine wkLine;
     private String  unit = "手";
     private FloatingActionButton fabChangeDate;
-    private int year, month, day;
     private final int CALENDAR_ID=689;
     private String mDate;
     private VolleyUtils mVolleyUtils;
@@ -75,53 +76,70 @@ public class ResultActivity extends BaseActivity {
         fabChangeDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Calendar calendar = Calendar.getInstance();
-//                year = calendar.get(Calendar.YEAR);
-//                month = calendar.get(Calendar.MONTH);
-//                day = calendar.get(Calendar.DAY_OF_MONTH);
 //                showDialog(CALENDAR_ID);
+                showDatePickerDialog();
 
-                Calendar now = Calendar.getInstance();
-                now.add(Calendar.DATE, 1);
-                MonthAdapter.CalendarDay maxDate = new MonthAdapter.CalendarDay(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
-                CalendarDatePickerDialogFragment cdp = new CalendarDatePickerDialogFragment()
-                        .setOnDateSetListener(new CalendarDatePickerDialogFragment.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
-                                MessageUtils.getInstance().showProgressDialog(ResultActivity.this,"系统提示","数据下载分析中...");
-                                String date = year+"-"+(monthOfYear+1)+"-"+dayOfMonth ;
-                                mDate = CommonUtils.dateToStringFormat(date);
-                                queryTradeHistory(mKLine.getCode(),mDate);//方式三
-                            }
-                        })
-                        .setFirstDayOfWeek(Calendar.SUNDAY)
-                        .setPreselectedDate(year, month, day)
-                        .setDateRange(null, maxDate)
-                        .setDoneText("确定")
-                        .setCancelText("取消")
-                        .setThemeLight();
-                cdp.show(getSupportFragmentManager(), FRAG_TAG_DATE_PICKER);
+//                Calendar now = Calendar.getInstance();
+//                now.add(Calendar.DATE, 1);
+//                MonthAdapter.CalendarDay maxDate = new MonthAdapter.CalendarDay(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+//                CalendarDatePickerDialogFragment cdp = new CalendarDatePickerDialogFragment()
+//                        .setOnDateSetListener(new CalendarDatePickerDialogFragment.OnDateSetListener() {
+//                            @Override
+//                            public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
+//                                MessageUtils.getInstance().showProgressDialog(ResultActivity.this,"系统提示","数据下载分析中...");
+//                                String date = year+"-"+(monthOfYear+1)+"-"+dayOfMonth ;
+//                                mDate = CommonUtils.dateToStringFormat(date);
+//                                queryTradeHistory(mKLine.getCode(),mDate);//方式三
+//                            }
+//                        })
+//                        .setFirstDayOfWeek(Calendar.SUNDAY)
+//                        .setPreselectedDate(year, month, day)
+//                        .setDateRange(null, maxDate)
+//                        .setDoneText("确定")
+//                        .setCancelText("取消")
+//                        .setThemeLight();
+//                cdp.show(getSupportFragmentManager(), FRAG_TAG_DATE_PICKER);
             }
         });
     }
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        // TODO Auto-generated method stub
-        if (id == CALENDAR_ID) {
-            return new DatePickerDialog(this, new  DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker arg0,
-                                      int arg1, int arg2, int arg3) {
-                    // TODO Auto-generated method stub
-                    // arg1 = year, arg2 = month, arg3 = day
-                    MessageUtils.getInstance().showProgressDialog(ResultActivity.this,"系统提示","数据下载分析中...");
-                    String date = arg1+"-"+(arg2+1)+"-"+arg3 ;
-                    mDate = CommonUtils.dateToStringFormat(date);
-                    queryTradeHistory(mKLine.getCode(),mDate);//方式三
-                }
-            }, year, month, day);
-        }
-        return null;
+//    @Override
+//    protected Dialog onCreateDialog(int id) {
+//        // TODO Auto-generated method stub
+//        if (id == CALENDAR_ID) {
+//            return new DatePickerDialog(this, new  DatePickerDialog.OnDateSetListener() {
+//                @Override
+//                public void onDateSet(DatePicker arg0,
+//                                      int arg1, int arg2, int arg3) {
+//                    // TODO Auto-generated method stub
+//                    // arg1 = year, arg2 = month, arg3 = day
+//                    MessageUtils.getInstance().showProgressDialog(ResultActivity.this,"系统提示","数据下载分析中...");
+//                    String date = arg1+"-"+(arg2+1)+"-"+arg3 ;
+//                    mDate = CommonUtils.dateToStringFormat(date);
+//                    queryTradeHistory(mKLine.getCode(),mDate);//方式三
+//                }
+//            }, year, month, day);
+//        }
+//        return null;
+//    }
+
+    public void showDatePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+        int year, month, day;
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH);
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+        new DatePickerDialog(this/*,R.style.Custom*/, new  DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker arg0,
+                                  int arg1, int arg2, int arg3) {
+                // TODO Auto-generated method stub
+                // arg1 = year, arg2 = month, arg3 = day
+                MessageUtils.getInstance().showProgressDialog(ResultActivity.this,"系统提示","数据下载分析中...");
+                String date = arg1+"-"+(arg2+1)+"-"+arg3 ;
+                mDate = CommonUtils.dateToStringFormat(date);
+                queryTradeHistory(mKLine.getCode(),mDate);//方式三
+            }
+        }, year, month, day).show();
     }
 
     /**
