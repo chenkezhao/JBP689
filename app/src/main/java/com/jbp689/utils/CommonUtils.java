@@ -14,7 +14,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -213,5 +216,40 @@ public class CommonUtils {
 			Toast.makeText(JBPApplication.getInstance(), "异常："+ex.toString(), Toast.LENGTH_LONG).show();
 		}
 		return null;
+	}
+	public static Date dateToFormat(String date,String templet){
+		SimpleDateFormat sdf = new SimpleDateFormat(templet);
+		try{
+			return sdf.parse(date);
+		}catch (Exception ex){
+			ex.printStackTrace();
+			Toast.makeText(JBPApplication.getInstance(), "异常："+ex.toString(), Toast.LENGTH_LONG).show();
+		}
+		return null;
+	}
+
+	/**
+	 * 判断指定日期是否为周未
+	 * @param date
+	 * @return
+     */
+	public static boolean weekendMethod(String date) {
+		DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+		String Date = date;  //传入的date格式是yyyy-MM-dd
+		Date bdate=null;
+		try {
+			bdate = format1.parse(Date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(bdate);
+		if(cal.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY||cal.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY){
+			//System.out.println("是周末");
+			return true;
+		}else{
+			//System.out.println("不是周末！");
+			return false;
+		}
 	}
 }

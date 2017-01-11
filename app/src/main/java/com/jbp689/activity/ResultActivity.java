@@ -2,15 +2,18 @@ package com.jbp689.activity;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.codetroopers.betterpickers.calendardatepicker.MonthAdapter;
@@ -24,6 +27,7 @@ import com.jbp689.utils.HtmlParseUtils;
 import com.jbp689.utils.MessageUtils;
 import com.jbp689.utils.StringUtils;
 import com.jbp689.utils.VolleyUtils;
+import com.jbp689.widgets.GestureListener;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -73,6 +77,8 @@ public class ResultActivity extends BaseActivity {
         middleVolume = (TextView) findViewById(R.id.tv_middleVolume);
         downVolume = (TextView) findViewById(R.id.tv_downVolume);
         wkLine = (com.jbp689.widgets.KLine)findViewById(R.id.w_kLine);
+        wkLine.setLongClickable(true);
+        wkLine.setOnTouchListener(new MyGestureListener(this));
         fabChangeDate = (FloatingActionButton) findViewById(R.id.fab_changeDate);
         fabChangeDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,6 +129,66 @@ public class ResultActivity extends BaseActivity {
 //        return null;
 //    }
 
+    /**
+     * 继承GestureListener，重写left和right方法
+     */
+    private class MyGestureListener extends GestureListener {
+        public MyGestureListener(Context context) {
+            super(context);
+        }
+        @Override
+        public boolean left() {
+            String date = mKLine.getDate();
+            if(date.indexOf("今日")!=-1){
+                MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(ResultActivity.this),"不能再后了！再往后就穿越了。");
+                return false;
+            }
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(CommonUtils.dateToFormat(date));
+            //先加一天
+            calendar.set(Calendar.DATE,calendar.get(Calendar.DATE)+1);
+            date=CommonUtils.dateToStringFormat(calendar.getTime());
+            boolean isWeekend = false;
+            while (CommonUtils.weekendMethod(date)){
+                calendar.set(Calendar.DATE,calendar.get(Calendar.DATE)+1);
+                date=CommonUtils.dateToStringFormat(calendar.getTime());
+                isWeekend = true;
+            }
+            if(isWeekend){
+                Toast.makeText(ResultActivity.this,"已经为你跳过周未！",Toast.LENGTH_SHORT).show();
+            }
+            if(CommonUtils.dateToFormat(new Date()).getTime()<CommonUtils.dateToFormat(date).getTime()){
+                MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(ResultActivity.this),"不能再后了！再往后就穿越了。");
+                return false;
+            }
+            queryTradeHistory(mKLine.getCode(),date);//方式三
+            return super.left();
+        }
+
+        @Override
+        public boolean right() {
+            String date = mKLine.getDate();
+            if(date.indexOf("今日")!=-1){
+                date=CommonUtils.dateToStringFormat(new Date());
+            }
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(CommonUtils.dateToFormat(date));
+            //先减一天
+            calendar.set(Calendar.DATE,calendar.get(Calendar.DATE)-1);
+            date=CommonUtils.dateToStringFormat(calendar.getTime());
+            boolean isWeekend = false;
+            while (CommonUtils.weekendMethod(date)){
+                calendar.set(Calendar.DATE,calendar.get(Calendar.DATE)-1);
+                date=CommonUtils.dateToStringFormat(calendar.getTime());
+                isWeekend = true;
+            }
+            if(isWeekend){
+                Toast.makeText(ResultActivity.this,"已经为你跳过周未！",Toast.LENGTH_SHORT).show();
+            }
+            queryTradeHistory(mKLine.getCode(),date);//方式三
+            return super.right();
+        }
+    }
     public void showDatePickerDialog() {
         Calendar calendar = Calendar.getInstance();
         int year, month, day;
@@ -160,6 +226,7 @@ public class ResultActivity extends BaseActivity {
                 //本地
                 setKLineData(kLine);
                 initActionBar(kLine);
+                mKLine = kLine;
                 MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(ResultActivity.this),"本地获取历史成交明细！");
             }else{
                 //历史
@@ -230,5 +297,6 @@ public class ResultActivity extends BaseActivity {
         }
         setKLineData(kLine);
         initActionBar(kLine);
+        mKLine = kLine;
     }
 }
