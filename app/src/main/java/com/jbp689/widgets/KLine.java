@@ -94,12 +94,15 @@ public class KLine extends View{
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if(totalVolume==0){
-            return;
-        }
         /*控件使用的油漆（画笔）*/
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(kLineColor);
+
+        if(totalVolume==0){
+            paint.setColor(0xffffffff);
+            canvas.drawRect(new Rect(0, 0, this.getWidth(), this.getHeight()),paint);
+            return;
+        }
 
         int screenWidth = JBPApplication.getInstance().getScreenWidth();
         int startHeight = 100;

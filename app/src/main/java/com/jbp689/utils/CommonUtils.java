@@ -60,9 +60,11 @@ public class CommonUtils {
 //                KLine kLine = JExcelApiUtils.readSinaTradehistoryXls(result,new KLine(isRed),td);
 				KLine kLine = readSinaTradehistoryTxt(result,new KLine(isRed),td);
                 EventBus.getDefault().post(kLine);
-				//保存历史到数据
-				TransactionDetailDao.getInstance().insert(td);
-				KLineDao.getInstance().insert(kLine);
+				if(kLine.getTotalVolume()!=0){
+					//保存历史到数据
+					TransactionDetailDao.getInstance().insert(td);
+					KLineDao.getInstance().insert(kLine);
+				}
 			}
 
 			@Override

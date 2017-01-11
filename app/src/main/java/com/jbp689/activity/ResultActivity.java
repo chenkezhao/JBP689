@@ -267,7 +267,12 @@ public class ResultActivity extends BaseActivity {
             wkLine.invalidate();
         }else{
             totalVolume.setText("今日没数据，请查询历史数据！");
-            totalVolume.setTextColor(0xffff0000);
+            upVolume.setText("");
+            middleVolume.setText("");
+            downVolume.setText("");
+            wkLine.setTotalVolume(0);
+            //View重新调用一次draw
+            wkLine.invalidate();
         }
     }
     @Override
