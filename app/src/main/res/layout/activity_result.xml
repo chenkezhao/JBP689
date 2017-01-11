@@ -36,8 +36,7 @@
         <com.jbp689.widgets.KLine
             android:id="@+id/w_kLine"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="100px">
+            android:layout_height="match_parent">
 
         </com.jbp689.widgets.KLine>
     </com.zhy.autolayout.AutoLinearLayout>

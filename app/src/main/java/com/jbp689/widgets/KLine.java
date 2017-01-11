@@ -102,7 +102,7 @@ public class KLine extends View{
         paint.setColor(kLineColor);
 
         int screenWidth = JBPApplication.getInstance().getScreenWidth();
-        int startHeight = 50;
+        int startHeight = 100;
         int endHeight = this.getHeight()-2*startHeight;
         int viewHeight = endHeight-startHeight;
         //线
