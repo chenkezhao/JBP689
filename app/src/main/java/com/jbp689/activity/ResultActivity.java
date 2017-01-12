@@ -84,28 +84,32 @@ public class ResultActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 //                showDialog(CALENDAR_ID);
-                showDatePickerDialog();
+//                showDatePickerDialog();
 
-//                Calendar now = Calendar.getInstance();
-//                now.add(Calendar.DATE, 1);
-//                MonthAdapter.CalendarDay maxDate = new MonthAdapter.CalendarDay(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
-//                CalendarDatePickerDialogFragment cdp = new CalendarDatePickerDialogFragment()
-//                        .setOnDateSetListener(new CalendarDatePickerDialogFragment.OnDateSetListener() {
-//                            @Override
-//                            public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
-//                                MessageUtils.getInstance().showProgressDialog(ResultActivity.this,"系统提示","数据下载分析中...");
-//                                String date = year+"-"+(monthOfYear+1)+"-"+dayOfMonth ;
-//                                mDate = CommonUtils.dateToStringFormat(date);
-//                                queryTradeHistory(mKLine.getCode(),mDate);//方式三
-//                            }
-//                        })
-//                        .setFirstDayOfWeek(Calendar.SUNDAY)
-//                        .setPreselectedDate(year, month, day)
-//                        .setDateRange(null, maxDate)
-//                        .setDoneText("确定")
-//                        .setCancelText("取消")
-//                        .setThemeLight();
-//                cdp.show(getSupportFragmentManager(), FRAG_TAG_DATE_PICKER);
+                Calendar calendar = Calendar.getInstance();
+                int year, month, day;
+                year = calendar.get(Calendar.YEAR);
+                month = calendar.get(Calendar.MONTH);
+                day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                MonthAdapter.CalendarDay maxDate = new MonthAdapter.CalendarDay(year, month, day);
+                CalendarDatePickerDialogFragment cdp = new CalendarDatePickerDialogFragment()
+                        .setOnDateSetListener(new CalendarDatePickerDialogFragment.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
+                                MessageUtils.getInstance().showProgressDialog(ResultActivity.this,"系统提示","数据下载分析中...");
+                                String date = year+"-"+(monthOfYear+1)+"-"+dayOfMonth ;
+                                mDate = CommonUtils.dateToStringFormat(date);
+                                queryTradeHistory(mKLine.getCode(),mDate);//方式三
+                            }
+                        })
+                        .setFirstDayOfWeek(Calendar.SUNDAY)
+                        .setPreselectedDate(year, month, day)
+                        .setDateRange(null, maxDate)
+                        .setDoneText("确定")
+                        .setCancelText("取消")
+                        .setThemeCustom(R.style.MyCustomBetterPickersDialogs);
+                cdp.show(getSupportFragmentManager(), FRAG_TAG_DATE_PICKER);
             }
         });
     }
@@ -227,7 +231,7 @@ public class ResultActivity extends BaseActivity {
                 setKLineData(kLine);
                 initActionBar(kLine);
                 mKLine = kLine;
-                MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(ResultActivity.this),"本地获取历史成交明细！");
+//                MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(ResultActivity.this),"本地获取历史成交明细！");
             }else{
                 //历史
                 mHtmlParseUtils.parseTradeHistory(code,date,null);
@@ -266,14 +270,17 @@ public class ResultActivity extends BaseActivity {
             //View重新调用一次draw
             wkLine.invalidate();
         }else{
-            totalVolume.setText("今日没数据，请查询历史数据！");
-            upVolume.setText("");
-            middleVolume.setText("");
-            downVolume.setText("");
-            wkLine.setTotalVolume(0);
-            //View重新调用一次draw
-            wkLine.invalidate();
+            setNullData("输入的日期为非交易日期或没有交易数据！");
         }
+    }
+    private void setNullData(String msg){
+        totalVolume.setText(msg);
+        upVolume.setText("");
+        middleVolume.setText("");
+        downVolume.setText("");
+        wkLine.setTotalVolume(0);
+        //View重新调用一次draw
+        wkLine.invalidate();
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -296,10 +303,6 @@ public class ResultActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(KLine kLine) {
         MessageUtils.getInstance().closeProgressDialog();
-        if(StringUtils.isBlank(kLine.getCode()) || kLine.getTotalVolume()==0){
-            MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(ResultActivity.this),"该股票代码不存在或者当前没数据（不是交易日）！");
-            return;
-        }
         setKLineData(kLine);
         initActionBar(kLine);
         mKLine = kLine;

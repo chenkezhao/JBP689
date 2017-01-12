@@ -99,8 +99,8 @@ public class KLine extends View{
         paint.setColor(kLineColor);
 
         if(totalVolume==0){
-            paint.setColor(0xffffffff);
-            canvas.drawRect(new Rect(0, 0, this.getWidth(), this.getHeight()),paint);
+//            paint.setColor(0xffffffff);
+//            canvas.drawRect(new Rect(0, 0, this.getWidth(), this.getHeight()),paint);
             return;
         }
 

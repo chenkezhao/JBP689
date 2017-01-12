@@ -46,7 +46,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="24dp"
-        android:src="@mipmap/ic_logo"
+        android:src="@android:drawable/ic_menu_day"
         app:borderWidth="0dp"
         app:layout_anchor="@id/w_kLine"
         app:layout_anchorGravity="right|center"/>

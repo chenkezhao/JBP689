@@ -7,7 +7,7 @@
     <!--深暗主调背景色下的字体颜色-->
     <color name="colorTextInPrimaryDark">#FFFFFF</color>
     <!--高亮主调背景色-->
-    <color name="colorPrimaryight">#FFCDD2</color>
+    <color name="colorPrimaryLight">#FFCDD2</color>
     <!--强调色-->
     <color name="colorAccent">#FFC107</color>
     <!--主级字体颜色-->
