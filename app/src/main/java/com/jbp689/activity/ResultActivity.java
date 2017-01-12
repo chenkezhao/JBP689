@@ -240,6 +240,7 @@ public class ResultActivity extends BaseActivity {
     }
 
     private void setKLineData(KLine mKLine){
+        MessageUtils.getInstance().closeProgressDialog();
         if(mKLine.getTotalVolume()!=0){
             DecimalFormat df = new DecimalFormat("0.00");
             if(mKLine.isRed()){
@@ -275,6 +276,7 @@ public class ResultActivity extends BaseActivity {
     }
     private void setNullData(String msg){
         totalVolume.setText(msg);
+        totalVolume.setTextColor(0xffff0000);
         upVolume.setText("");
         middleVolume.setText("");
         downVolume.setText("");
@@ -302,7 +304,6 @@ public class ResultActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(KLine kLine) {
-        MessageUtils.getInstance().closeProgressDialog();
         setKLineData(kLine);
         initActionBar(kLine);
         mKLine = kLine;
