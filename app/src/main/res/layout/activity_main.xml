@@ -26,7 +26,7 @@
                     android:id="@+id/et_code"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:completionHint="本地数据"
+                    android:completionHint="本地数据（上下滑动）"
                     android:completionThreshold="1"
                     android:dropDownHeight="350px"
                     android:completionHintView="@layout/hint_auto_textview"
