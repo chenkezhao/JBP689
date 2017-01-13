@@ -170,7 +170,7 @@ public class KLineDao  extends BaseDao{
 
     public String[] getAllCode(){
         try {
-            List<DbModel> list = db.selector(KLine.class).select("distinct code").findAll();
+            List<DbModel> list = db.selector(KLine.class).select("distinct code").orderBy("code").findAll();
             String codes[]= new String[list.size()];
             int len = list.size();
             for(int i=0;i<len;i++){
