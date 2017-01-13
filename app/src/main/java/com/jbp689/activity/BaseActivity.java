@@ -13,12 +13,14 @@ import android.view.MenuItem;
 
 import com.jbp689.JBPApplication;
 import com.jbp689.entity.KLine;
+import com.jbp689.entity.MessageEvent;
 import com.jbp689.utils.MessageUtils;
 import com.jbp689.utils.StringUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.xutils.x;
 
 /**
  *
@@ -33,6 +35,7 @@ public class BaseActivity extends AppCompatActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        x.view().inject(this);
         mActionBar = getSupportActionBar();
         if(mActionBar!=null){
             mActionBar.setDisplayHomeAsUpEnabled(true);
@@ -129,7 +132,8 @@ public class BaseActivity extends AppCompatActivity{
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(KLine kLine) {
+    public void onEventMainThread(MessageEvent event) {
+        KLine kLine = event.getkLine();
         MessageUtils.getInstance().closeProgressDialog();
         if(StringUtils.isBlank(kLine.getCode()) || kLine.getTotalVolume()==0){
             MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(BaseActivity.this),"该股票代码不存在或者当前没数据（不是交易日）！");

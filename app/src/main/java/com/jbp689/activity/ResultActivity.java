@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -21,7 +22,10 @@ import com.codetroopers.betterpickers.datepicker.DatePickerDialogFragment;
 import com.jbp689.JBPApplication;
 import com.jbp689.R;
 import com.jbp689.db.dao.KLineDao;
+import com.jbp689.db.dao.TransactionDetailDao;
 import com.jbp689.entity.KLine;
+import com.jbp689.entity.MessageEvent;
+import com.jbp689.entity.TransactionDetail;
 import com.jbp689.utils.CommonUtils;
 import com.jbp689.utils.HtmlParseUtils;
 import com.jbp689.utils.MessageUtils;
@@ -31,6 +35,8 @@ import com.jbp689.widgets.GestureListener;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
@@ -50,12 +56,22 @@ public class ResultActivity extends BaseActivity {
     private String mDate;
     private VolleyUtils mVolleyUtils;
     private HtmlParseUtils mHtmlParseUtils;
+
+
+    private TextView currentPrice;
+    private TextView openPrice;
+    private TextView closePrice;
+    private TextView highPrice;
+    private TextView lowestPrice;
+
+    private TransactionDetailDao transactionDetailDao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
         mVolleyUtils = new VolleyUtils(this);
         mHtmlParseUtils = new HtmlParseUtils();
+        transactionDetailDao = TransactionDetailDao.getInstance();
         Intent intent = this.getIntent();
         mKLine = (KLine) intent.getSerializableExtra("kLine");
         if(mKLine.getTotalVolume()==0){
@@ -66,12 +82,33 @@ public class ResultActivity extends BaseActivity {
         setKLineData(mKLine);
     }
 
+    private void setTransactionDetail(TransactionDetail td){
+        if(td==null){
+            currentPrice.setText("");
+            openPrice.setText("");
+            closePrice.setText("");
+            highPrice.setText("");
+            lowestPrice.setText("");
+            return;
+        }
+        double c = td.getClosePrice();
+        currentPrice.setText(Html.fromHtml("<font color=#212121>当前价格</font>：<font color=#"+(td.getCurrentPrice()>c?"ff0000":td.getCurrentPrice()==c?"757575":"00ff00")+">"+td.getCurrentPrice()+"</font>"));
+        openPrice.setText(Html.fromHtml("<font color=#212121>开盘：</font><font color=#"+(td.getOpenPrice()>c?"ff0000":td.getOpenPrice()==c?"757575":"00ff00")+">"+td.getOpenPrice()+"</font>"));
+        closePrice.setText(Html.fromHtml("<font color=#212121>最高：</font><font color=#"+(td.getClosePrice()>c?"ff0000":td.getClosePrice()==c?"757575":"00ff00")+">"+td.getClosePrice()+"</font>"));
+        highPrice.setText(Html.fromHtml("<font color=#212121>最高：</font><font color=#"+(td.getHighPrice()>c?"ff0000":td.getHighPrice()==c?"757575":"00ff00")+">"+td.getHighPrice()+"</font>"));
+        lowestPrice.setText(Html.fromHtml("<font color=#212121>最低：</font><font color=#"+(td.getLowestPrice()>c?"ff0000":td.getLowestPrice()==c?"757575":"00ff00")+">"+td.getLowestPrice()+"</font>"));
+    }
     private void initActionBar(KLine mKLine){
         setTitle(mKLine.getName()+"("+mKLine.getCode()+")");
         setSubtitle(mKLine.getDate());
     }
 
     private void initView(){
+        currentPrice= (TextView) findViewById(R.id.tv_currentPrice);
+        openPrice= (TextView) findViewById(R.id.tv_openPrice);
+        closePrice= (TextView) findViewById(R.id.tv_closePrice);
+        highPrice= (TextView) findViewById(R.id.tv_highPrice);
+        lowestPrice= (TextView) findViewById(R.id.tv_lowestPrice);
         totalVolume = (TextView) findViewById(R.id.tv_totalVolume);
         upVolume = (TextView) findViewById(R.id.tv_upVolume);
         middleVolume = (TextView) findViewById(R.id.tv_middleVolume);
@@ -228,6 +265,8 @@ public class ResultActivity extends BaseActivity {
             KLine kLine = KLineDao.getInstance().queryKLineIsExist(code,date);
             if(kLine!=null){
                 //本地
+                TransactionDetail td=transactionDetailDao.getTransactionDetailBy(mKLine.getCode(),mKLine.getDate());
+                setTransactionDetail(td);
                 setKLineData(kLine);
                 initActionBar(kLine);
                 mKLine = kLine;
@@ -303,7 +342,10 @@ public class ResultActivity extends BaseActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(KLine kLine) {
+    public void onEventMainThread(MessageEvent event) {
+        KLine kLine = event.getkLine();
+        TransactionDetail td = event.getTd();
+        setTransactionDetail(td);
         setKLineData(kLine);
         initActionBar(kLine);
         mKLine = kLine;

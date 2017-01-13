@@ -33,12 +33,64 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/colorDivider"/>
         <com.jbp689.widgets.KLine
             android:id="@+id/w_kLine"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="1200px">
 
         </com.jbp689.widgets.KLine>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/colorDivider"/>
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="24px"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_currentPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8px"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8px"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tv_openPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/tv_closePrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+            </com.zhy.autolayout.AutoLinearLayout>
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tv_highPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/tv_lowestPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+            </com.zhy.autolayout.AutoLinearLayout>
+        </com.zhy.autolayout.AutoLinearLayout>
     </com.zhy.autolayout.AutoLinearLayout>
 
     <android.support.design.widget.FloatingActionButton
@@ -50,5 +102,6 @@
         app:borderWidth="0dp"
         app:layout_anchor="@id/w_kLine"
         app:layout_anchorGravity="right|center"/>
+
 
 </android.support.design.widget.CoordinatorLayout>

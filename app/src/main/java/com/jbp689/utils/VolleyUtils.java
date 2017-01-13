@@ -16,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.jbp689.JBPApplication;
 import com.jbp689.entity.KLine;
+import com.jbp689.entity.MessageEvent;
 import com.jbp689.entity.TransactionDetail;
 
 import org.greenrobot.eventbus.EventBus;
@@ -118,7 +119,8 @@ public class VolleyUtils {
 				byte[] b = response.getBytes(Charset.forName("utf-8"));
 				String html = new String(b);
 				KLine kLine = new HtmlParseUtils().parseKLine(html,td,new KLine(code));
-				EventBus.getDefault().post(kLine);
+				MessageEvent event = new MessageEvent(kLine,td);
+				EventBus.getDefault().post(event);
 			}
 		});
 	}

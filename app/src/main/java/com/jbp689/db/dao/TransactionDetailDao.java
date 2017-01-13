@@ -152,4 +152,19 @@ public class TransactionDetailDao extends BaseDao{
         }
         return null;
     }
+
+    /**
+     * 根据code、date获取
+     * @param code
+     * @param date
+     * @return
+     */
+    public TransactionDetail getTransactionDetailBy(String code, String date) {
+        try {
+            return db.selector(TransactionDetail.class).where("CODE", "=", code).and("DATE","=",date).findFirst();
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

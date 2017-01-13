@@ -15,7 +15,7 @@
     <!--次级字体颜色-->
     <color name="colorTextSecondary">#757575</color>
     <!--分隔线颜色-->
-    <color name="colorivider">#BDBDBD</color>
+    <color name="colorDivider">#BDBDBD</color>
 
 
     <!--股票：红涨绿跌-->
