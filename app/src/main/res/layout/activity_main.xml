@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <AutoCompleteTextView
+                <com.jbp689.widgets.MyAutoCompleteTextView
                     android:id="@+id/et_code"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

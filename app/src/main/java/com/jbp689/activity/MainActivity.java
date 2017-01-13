@@ -3,6 +3,7 @@ package com.jbp689.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import com.jbp689.utils.HtmlParseUtils;
 import com.jbp689.utils.MessageUtils;
 import com.jbp689.utils.StringUtils;
 import com.jbp689.utils.VolleyUtils;
+import com.jbp689.widgets.MyAutoCompleteTextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -27,12 +29,13 @@ import java.util.regex.Pattern;
 public class MainActivity extends BaseActivity {
 
     private Button btnAnalysis;
-    private AutoCompleteTextView etcode;
+    private MyAutoCompleteTextView etcode;
     private VolleyUtils mVolleyUtils;
     private String mCode;
     private String mDate;
     private HtmlParseUtils mHtmlParseUtils;
     private KLineDao kLineDao;
+    private String codes[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +48,11 @@ public class MainActivity extends BaseActivity {
         kLineDao = KLineDao.getInstance();
         initView();
     }
+
     private void initView(){
         btnAnalysis = (Button) findViewById(R.id.btn_analysis);
-        etcode = (AutoCompleteTextView) findViewById(R.id.et_code);
-        String codes[] = kLineDao.getAllCode();
+        etcode = (MyAutoCompleteTextView) findViewById(R.id.et_code);
+        codes = kLineDao.getAllCode();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_dropdown_item_1line, codes);
         etcode.setAdapter(adapter);
