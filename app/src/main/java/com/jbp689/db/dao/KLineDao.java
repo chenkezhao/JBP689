@@ -5,6 +5,7 @@ import com.jbp689.entity.KLine;
 import org.xutils.common.util.KeyValue;
 import org.xutils.db.sqlite.SqlInfoBuilder;
 import org.xutils.db.sqlite.WhereBuilder;
+import org.xutils.db.table.DbModel;
 import org.xutils.ex.DbException;
 
 import java.util.List;
@@ -161,6 +162,21 @@ public class KLineDao  extends BaseDao{
     public KLine queryKLineIsExist(String code, String date) {
         try {
             return db.selector(KLine.class).where("CODE","=",code).and("DATE","=",date).findFirst();
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String[] getAllCode(){
+        try {
+            List<DbModel> list = db.selector(KLine.class).select("distinct code").findAll();
+            String codes[]= new String[list.size()];
+            int len = list.size();
+            for(int i=0;i<len;i++){
+                codes[i] = list.get(i).getString("CODE");
+            }
+            return codes;
         } catch (DbException e) {
             e.printStackTrace();
         }

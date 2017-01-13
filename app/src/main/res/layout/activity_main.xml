@@ -22,10 +22,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <android.support.design.widget.TextInputEditText
+                <AutoCompleteTextView
                     android:id="@+id/et_code"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:completionHint="本地数据"
+                    android:completionThreshold="1"
                     android:hint="格式：前缀(sh|sz)+股票代码。例：sz002259"/>
             </android.support.design.widget.TextInputLayout>
 

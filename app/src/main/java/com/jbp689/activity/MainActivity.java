@@ -2,12 +2,13 @@ package com.jbp689.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TextInputEditText;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 
-import com.jbp689.JBPApplication;
 import com.jbp689.R;
+import com.jbp689.db.dao.KLineDao;
 import com.jbp689.entity.KLine;
 import com.jbp689.utils.CommonUtils;
 import com.jbp689.utils.HtmlParseUtils;
@@ -19,17 +20,19 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MainActivity extends BaseActivity {
 
-    Button btnAnalysis;
-    TextInputEditText etcode;
+    private Button btnAnalysis;
+    private AutoCompleteTextView etcode;
     private VolleyUtils mVolleyUtils;
     private String mCode;
     private String mDate;
     private HtmlParseUtils mHtmlParseUtils;
+    private KLineDao kLineDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +42,16 @@ public class MainActivity extends BaseActivity {
         setMainHomeUp();
         setSubtitle("sh:上海上市的股票，sz:深圳上市的股票");
         mVolleyUtils = new VolleyUtils(MainActivity.this);
+        kLineDao = KLineDao.getInstance();
         initView();
     }
     private void initView(){
         btnAnalysis = (Button) findViewById(R.id.btn_analysis);
-        etcode = (TextInputEditText) findViewById(R.id.et_code);
+        etcode = (AutoCompleteTextView) findViewById(R.id.et_code);
+        String codes[] = kLineDao.getAllCode();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line, codes);
+        etcode.setAdapter(adapter);
         btnAnalysis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
