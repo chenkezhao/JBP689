@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true">
 
-        <LinearLayout
+        <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -28,6 +28,8 @@
                     android:layout_height="wrap_content"
                     android:completionHint="本地数据"
                     android:completionThreshold="1"
+                    android:dropDownHeight="350px"
+                    android:completionHintView="@layout/hint_auto_textview"
                     android:hint="格式：前缀(sh|sz)+股票代码。例：sz002259"/>
             </android.support.design.widget.TextInputLayout>
 
@@ -36,6 +38,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="开始分析"/>
-        </LinearLayout>
+        </com.zhy.autolayout.AutoLinearLayout>
     </ScrollView>
 </RelativeLayout>
