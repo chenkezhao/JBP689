@@ -13,41 +13,40 @@
         android:orientation="vertical"
         tools:context="com.jbp689.activity.ResultActivity">
 
-        <TextView
-            android:id="@+id/tv_totalVolume"
+        <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:padding="24px"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_totalVolume"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-        <TextView
-            android:id="@+id/tv_upVolume"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/tv_upVolume"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-        <TextView
-            android:id="@+id/tv_middleVolume"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/tv_middleVolume"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-        <TextView
-            android:id="@+id/tv_downVolume"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/tv_downVolume"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.zhy.autolayout.AutoLinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/colorDivider"/>
         <com.jbp689.widgets.KLine
             android:id="@+id/w_kLine"
             android:layout_width="match_parent"
-            android:layout_height="1200px">
+            android:layout_height="1100px">
 
         </com.jbp689.widgets.KLine>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/colorDivider"/>
         <com.zhy.autolayout.AutoLinearLayout
+            android:id="@+id/ll_transactionDetail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="24px"
@@ -100,8 +99,8 @@
         android:layout_margin="24dp"
         android:src="@android:drawable/ic_menu_day"
         app:borderWidth="0dp"
-        app:layout_anchor="@id/w_kLine"
-        app:layout_anchorGravity="right|center"/>
+        app:layout_anchor="@id/ll_transactionDetail"
+        app:layout_anchorGravity="right|top"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

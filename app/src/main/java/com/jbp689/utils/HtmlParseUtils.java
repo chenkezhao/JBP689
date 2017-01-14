@@ -3,6 +3,7 @@ package com.jbp689.utils;
 import com.android.volley.Response;
 import com.jbp689.JBPApplication;
 import com.jbp689.entity.KLine;
+import com.jbp689.entity.MessageEvent;
 import com.jbp689.entity.TransactionDetail;
 
 import org.greenrobot.eventbus.EventBus;
@@ -208,7 +209,8 @@ public class HtmlParseUtils {
         kLine.setMiddleVolume(middleVolume/100);
         kLine.setDownVolume(downVolume/100);
         kLine.setTotalVolume(totalVolume/100);
-        EventBus.getDefault().post(kLine);
+        MessageEvent event= new MessageEvent(kLine,td);
+        EventBus.getDefault().post(event);
     }
 
 

@@ -2,6 +2,7 @@ package com.jbp689.widgets;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -29,7 +30,6 @@ public class KLine extends View{
     private long	middleVolume;	// K线中间部分
     private long	downVolume;		// K线下部分
     private int kLineColor;//颜色
-
 
     public KLine(Context context) {
         super(context);
@@ -109,6 +109,12 @@ public class KLine extends View{
         int endHeight = this.getHeight()-2*startHeight;
         int viewHeight = endHeight-startHeight;
         //线
+        canvas.drawLine(screenWidth/2, startHeight, screenWidth/2, endHeight, paint);
+        Paint divider =new Paint(Paint.ANTI_ALIAS_FLAG);
+        divider.setColor(getResources().getColor(R.color.colorDivider));
+        canvas.drawLine(0, 10, screenWidth, 10, divider);
+        canvas.drawLine(0, this.getHeight()-10, screenWidth, this.getHeight()-10, divider);
+
         canvas.drawLine(screenWidth/2, startHeight, screenWidth/2, endHeight, paint);
         //矩形
         DecimalFormat df = new DecimalFormat("#");

@@ -5,6 +5,7 @@ import com.jbp689.JBPApplication;
 import com.jbp689.db.dao.KLineDao;
 import com.jbp689.db.dao.TransactionDetailDao;
 import com.jbp689.entity.KLine;
+import com.jbp689.entity.MessageEvent;
 import com.jbp689.entity.TransactionDetail;
 import org.greenrobot.eventbus.EventBus;
 import org.xutils.common.Callback;
@@ -59,7 +60,8 @@ public class CommonUtils {
                 //解析excel文件
 //                KLine kLine = JExcelApiUtils.readSinaTradehistoryXls(result,new KLine(isRed),td);
 				KLine kLine = readSinaTradehistoryTxt(result,new KLine(isRed),td);
-                EventBus.getDefault().post(kLine);
+				MessageEvent event = new MessageEvent(kLine,td);
+                EventBus.getDefault().post(event);
 				if(kLine.getTotalVolume()!=0){
 					//保存历史到数据
 					TransactionDetailDao.getInstance().insert(td);

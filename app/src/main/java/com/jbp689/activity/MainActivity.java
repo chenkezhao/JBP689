@@ -11,6 +11,8 @@ import android.widget.Button;
 import com.jbp689.R;
 import com.jbp689.db.dao.KLineDao;
 import com.jbp689.entity.KLine;
+import com.jbp689.entity.MessageEvent;
+import com.jbp689.entity.TransactionDetail;
 import com.jbp689.utils.CommonUtils;
 import com.jbp689.utils.HtmlParseUtils;
 import com.jbp689.utils.MessageUtils;
@@ -103,11 +105,14 @@ public class MainActivity extends BaseActivity {
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(KLine kLine) {
+    public void onEventMainThread(MessageEvent event) {
+        KLine kLine = event.getkLine();
+        TransactionDetail td = event.getTd();
         MessageUtils.getInstance().closeProgressDialog();
         Intent intent = new Intent(MainActivity.this,ResultActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("kLine", kLine);
+        bundle.putSerializable("td", td);
         intent.putExtras(bundle);
         startActivity(intent);
     }

@@ -45,6 +45,7 @@ import java.util.Date;
 public class ResultActivity extends BaseActivity {
     private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
     private KLine mKLine;
+    private TransactionDetail mTransactionDetail;
     private TextView totalVolume;
     private TextView upVolume;
     private TextView middleVolume;
@@ -74,16 +75,17 @@ public class ResultActivity extends BaseActivity {
         transactionDetailDao = TransactionDetailDao.getInstance();
         Intent intent = this.getIntent();
         mKLine = (KLine) intent.getSerializableExtra("kLine");
+        mTransactionDetail = (TransactionDetail) intent.getSerializableExtra("td");
         if(mKLine.getTotalVolume()==0){
             MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(ResultActivity.this),"当前没数据（不是交易日或未开盘）");
         }
         initActionBar(mKLine);
         initView();
-        setKLineData(mKLine);
+        setKLineData(mKLine,mTransactionDetail);
     }
 
     private void setTransactionDetail(TransactionDetail td){
-        if(td==null){
+        if(td==null || td.getCurrentPrice()==0){
             currentPrice.setText("");
             openPrice.setText("");
             closePrice.setText("");
@@ -92,9 +94,9 @@ public class ResultActivity extends BaseActivity {
             return;
         }
         double c = td.getClosePrice();
-        currentPrice.setText(Html.fromHtml("<font color=#212121>当前价格</font>：<font color=#"+(td.getCurrentPrice()>c?"ff0000":td.getCurrentPrice()==c?"757575":"00ff00")+">"+td.getCurrentPrice()+"</font>"));
+        currentPrice.setText(Html.fromHtml("<font color=#212121>当前|收盘</font>：<font color=#"+(td.getCurrentPrice()>c?"ff0000":td.getCurrentPrice()==c?"757575":"00ff00")+">"+td.getCurrentPrice()+"</font>"));
         openPrice.setText(Html.fromHtml("<font color=#212121>开盘：</font><font color=#"+(td.getOpenPrice()>c?"ff0000":td.getOpenPrice()==c?"757575":"00ff00")+">"+td.getOpenPrice()+"</font>"));
-        closePrice.setText(Html.fromHtml("<font color=#212121>最高：</font><font color=#"+(td.getClosePrice()>c?"ff0000":td.getClosePrice()==c?"757575":"00ff00")+">"+td.getClosePrice()+"</font>"));
+        closePrice.setText(Html.fromHtml("<font color=#212121>昨收：</font><font color=#"+(td.getClosePrice()>c?"ff0000":td.getClosePrice()==c?"757575":"00ff00")+">"+td.getClosePrice()+"</font>"));
         highPrice.setText(Html.fromHtml("<font color=#212121>最高：</font><font color=#"+(td.getHighPrice()>c?"ff0000":td.getHighPrice()==c?"757575":"00ff00")+">"+td.getHighPrice()+"</font>"));
         lowestPrice.setText(Html.fromHtml("<font color=#212121>最低：</font><font color=#"+(td.getLowestPrice()>c?"ff0000":td.getLowestPrice()==c?"757575":"00ff00")+">"+td.getLowestPrice()+"</font>"));
     }
@@ -265,9 +267,8 @@ public class ResultActivity extends BaseActivity {
             KLine kLine = KLineDao.getInstance().queryKLineIsExist(code,date);
             if(kLine!=null){
                 //本地
-                TransactionDetail td=transactionDetailDao.getTransactionDetailBy(mKLine.getCode(),mKLine.getDate());
-                setTransactionDetail(td);
-                setKLineData(kLine);
+                TransactionDetail td=transactionDetailDao.getTransactionDetailBy(code,date);
+                setKLineData(kLine,td);
                 initActionBar(kLine);
                 mKLine = kLine;
 //                MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(ResultActivity.this),"本地获取历史成交明细！");
@@ -278,8 +279,9 @@ public class ResultActivity extends BaseActivity {
         }
     }
 
-    private void setKLineData(KLine mKLine){
+    private void setKLineData(KLine mKLine,TransactionDetail td){
         MessageUtils.getInstance().closeProgressDialog();
+        setTransactionDetail(td);
         if(mKLine.getTotalVolume()!=0){
             DecimalFormat df = new DecimalFormat("0.00");
             if(mKLine.isRed()){
@@ -345,8 +347,7 @@ public class ResultActivity extends BaseActivity {
     public void onEventMainThread(MessageEvent event) {
         KLine kLine = event.getkLine();
         TransactionDetail td = event.getTd();
-        setTransactionDetail(td);
-        setKLineData(kLine);
+        setKLineData(kLine,td);
         initActionBar(kLine);
         mKLine = kLine;
     }
