@@ -77,10 +77,15 @@ public class ResultActivity extends BaseActivity {
         mKLine = (KLine) intent.getSerializableExtra("kLine");
         mTransactionDetail = (TransactionDetail) intent.getSerializableExtra("td");
         if(mKLine.getTotalVolume()==0){
-            MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(ResultActivity.this),"当前没数据（不是交易日或未开盘）");
+            MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(ResultActivity.this),"当前非交易日期或没有交易数据！");
         }
         initActionBar(mKLine);
         initView();
+        if(CommonUtils.weekendMethod(CommonUtils.dateToStringFormat(new Date()))){
+            totalVolume.setText("今天是周未！");
+            totalVolume.setTextColor(0xffff0000);
+            return;
+        }
         setKLineData(mKLine,mTransactionDetail);
     }
 
