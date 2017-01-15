@@ -141,7 +141,6 @@ public class ResultActivity extends BaseActivity {
                         .setOnDateSetListener(new CalendarDatePickerDialogFragment.OnDateSetListener() {
                             @Override
                             public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
-                                MessageUtils.getInstance().showProgressDialog(ResultActivity.this,"系统提示","数据下载分析中...");
                                 String date = year+"-"+(monthOfYear+1)+"-"+dayOfMonth ;
                                 mDate = CommonUtils.dateToStringFormat(date);
                                 queryTradeHistory(mKLine.getCode(),mDate);//方式三
@@ -265,6 +264,7 @@ public class ResultActivity extends BaseActivity {
      * @return
      */
     private void queryTradeHistory(String code, String date){
+        MessageUtils.getInstance().showProgressDialog(ResultActivity.this,"系统提示", "数据下载分析中...");
         if(CommonUtils.dateToStringFormat(new Date()).equals(date)){
             //今日
             mVolleyUtils.getTransactionDetail(code);//方式一

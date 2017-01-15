@@ -74,7 +74,6 @@ public class MainActivity extends BaseActivity {
                 // 现在创建 matcher 对象
                 Matcher m = r.matcher(code);
                 if (m.find()) {
-                    MessageUtils.getInstance().showProgressDialog(MainActivity.this,"系统提示", "数据下载分析中...");
                     mCode = code;
                     mDate = CommonUtils.dateToStringFormat(new Date());
 //                  getTransactionDetail(code);//方式一
@@ -94,6 +93,7 @@ public class MainActivity extends BaseActivity {
      * @return
      */
     private void queryTradeHistory(final String code, final String date){
+        MessageUtils.getInstance().showProgressDialog(MainActivity.this,"系统提示", "数据下载分析中...");
         if(CommonUtils.dateToStringFormat(new Date()).equals(date)){
             //今日
             mVolleyUtils.getTransactionDetail(code);//方式一
