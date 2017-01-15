@@ -166,7 +166,6 @@ public class ResultActivity extends BaseActivity {
 //                                      int arg1, int arg2, int arg3) {
 //                    // TODO Auto-generated method stub
 //                    // arg1 = year, arg2 = month, arg3 = day
-//                    MessageUtils.getInstance().showProgressDialog(ResultActivity.this,"系统提示","数据下载分析中...");
 //                    String date = arg1+"-"+(arg2+1)+"-"+arg3 ;
 //                    mDate = CommonUtils.dateToStringFormat(date);
 //                    queryTradeHistory(mKLine.getCode(),mDate);//方式三
@@ -248,7 +247,6 @@ public class ResultActivity extends BaseActivity {
                                   int arg1, int arg2, int arg3) {
                 // TODO Auto-generated method stub
                 // arg1 = year, arg2 = month, arg3 = day
-                MessageUtils.getInstance().showProgressDialog(ResultActivity.this,"系统提示","数据下载分析中...");
                 String date = arg1+"-"+(arg2+1)+"-"+arg3 ;
                 mDate = CommonUtils.dateToStringFormat(date);
                 queryTradeHistory(mKLine.getCode(),mDate);//方式三
