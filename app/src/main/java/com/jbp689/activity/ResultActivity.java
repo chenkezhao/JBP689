@@ -100,7 +100,7 @@ public class ResultActivity extends BaseActivity {
             return;
         }
         double c = td.getClosePrice();
-        currentPrice.setText(Html.fromHtml("<font color=#212121>当前|收盘</font>：<font color=#"+(td.getCurrentPrice()>c?"ff0000":td.getCurrentPrice()==c?"757575":"00ff00")+">"+td.getCurrentPrice()+"</font>"));
+        currentPrice.setText(Html.fromHtml("<font color=#212121>当前|收盘：</font><font color=#"+(td.getCurrentPrice()>c?"ff0000":td.getCurrentPrice()==c?"757575":"00ff00")+">"+td.getCurrentPrice()+"</font>"));
         openPrice.setText(Html.fromHtml("<font color=#212121>开盘：</font><font color=#"+(td.getOpenPrice()>c?"ff0000":td.getOpenPrice()==c?"757575":"00ff00")+">"+td.getOpenPrice()+"</font>"));
         closePrice.setText(Html.fromHtml("<font color=#212121>昨收：</font><font color=#"+(td.getClosePrice()>c?"ff0000":td.getClosePrice()==c?"757575":"00ff00")+">"+td.getClosePrice()+"</font>"));
         highPrice.setText(Html.fromHtml("<font color=#212121>最高：</font><font color=#"+(td.getHighPrice()>c?"ff0000":td.getHighPrice()==c?"757575":"00ff00")+">"+td.getHighPrice()+"</font>"));
