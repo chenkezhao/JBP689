@@ -99,7 +99,11 @@ public class VolleyUtils {
 				td.setCurrentPrice(Double.parseDouble(arr[3]));
 				td.setHighPrice(Double.parseDouble(arr[4]));
 				td.setLowestPrice(Double.parseDouble(arr[5]));
-				td.setDate(/*arr[30]+*/"今日"+arr[31]);
+				String date = arr[30];
+				if(CommonUtils.dateToFormat(date).getTime()==CommonUtils.dateToFormat(new Date()).getTime()){
+					date = "今日"+arr[31];
+				}
+				td.setDate(date);
 				startTransactionDetail(td,code);
 			}
 		});
