@@ -85,27 +85,12 @@ public class ResultActivity extends BaseActivity {
         if(CommonUtils.weekendMethod(CommonUtils.dateToStringFormat(new Date()))){
             totalVolume.setText("今天是周未！");
             totalVolume.setTextColor(0xffff0000);
+            setSubtitle("今日");
             return;
         }
         setKLineData(mKLine,mTransactionDetail);
     }
 
-    private void setTransactionDetail(TransactionDetail td){
-        if(td==null || td.getCurrentPrice()==0){
-            currentPrice.setText("");
-            openPrice.setText("");
-            closePrice.setText("");
-            highPrice.setText("");
-            lowestPrice.setText("");
-            return;
-        }
-        double c = td.getClosePrice();
-        currentPrice.setText(Html.fromHtml("<font color=#212121>当前|收盘：</font><font color=#"+(td.getCurrentPrice()>c?"ff0000":td.getCurrentPrice()==c?"757575":"00ff00")+">"+td.getCurrentPrice()+"</font>"));
-        openPrice.setText(Html.fromHtml("<font color=#212121>开盘：</font><font color=#"+(td.getOpenPrice()>c?"ff0000":td.getOpenPrice()==c?"757575":"00ff00")+">"+td.getOpenPrice()+"</font>"));
-        closePrice.setText(Html.fromHtml("<font color=#212121>昨收：</font><font color=#"+(td.getClosePrice()>c?"ff0000":td.getClosePrice()==c?"757575":"00ff00")+">"+td.getClosePrice()+"</font>"));
-        highPrice.setText(Html.fromHtml("<font color=#212121>最高：</font><font color=#"+(td.getHighPrice()>c?"ff0000":td.getHighPrice()==c?"757575":"00ff00")+">"+td.getHighPrice()+"</font>"));
-        lowestPrice.setText(Html.fromHtml("<font color=#212121>最低：</font><font color=#"+(td.getLowestPrice()>c?"ff0000":td.getLowestPrice()==c?"757575":"00ff00")+">"+td.getLowestPrice()+"</font>"));
-    }
     private void initActionBar(KLine mKLine){
         setTitle(mKLine.getName()+"("+mKLine.getCode()+")");
         setSubtitle(mKLine.getDate());
@@ -285,7 +270,6 @@ public class ResultActivity extends BaseActivity {
 
     private void setKLineData(KLine mKLine,TransactionDetail td){
         MessageUtils.getInstance().closeProgressDialog();
-        setTransactionDetail(td);
         if(mKLine.getTotalVolume()!=0){
             DecimalFormat df = new DecimalFormat("0.00");
             DecimalFormat dfPrice = new DecimalFormat("#,###");
@@ -316,6 +300,13 @@ public class ResultActivity extends BaseActivity {
             wkLine.setDownVolume(mKLine.getDownVolume());
             //View重新调用一次draw
             wkLine.invalidate();
+
+            double c = td.getClosePrice();
+            currentPrice.setText(Html.fromHtml("<font color=#212121>当前|收盘：</font><font color=#"+(td.getCurrentPrice()>c?"ff0000":td.getCurrentPrice()==c?"757575":"00ff00")+">"+td.getCurrentPrice()+"</font>"));
+            openPrice.setText(Html.fromHtml("<font color=#212121>开盘：</font><font color=#"+(td.getOpenPrice()>c?"ff0000":td.getOpenPrice()==c?"757575":"00ff00")+">"+td.getOpenPrice()+"</font>"));
+            closePrice.setText(Html.fromHtml("<font color=#212121>昨收：</font><font color=#"+(td.getClosePrice()>c?"ff0000":td.getClosePrice()==c?"757575":"00ff00")+">"+td.getClosePrice()+"</font>"));
+            highPrice.setText(Html.fromHtml("<font color=#212121>最高：</font><font color=#"+(td.getHighPrice()>c?"ff0000":td.getHighPrice()==c?"757575":"00ff00")+">"+td.getHighPrice()+"</font>"));
+            lowestPrice.setText(Html.fromHtml("<font color=#212121>最低：</font><font color=#"+(td.getLowestPrice()>c?"ff0000":td.getLowestPrice()==c?"757575":"00ff00")+">"+td.getLowestPrice()+"</font>"));
         }else{
             setNullData("输入的日期为非交易日期或没有交易数据！");
         }
@@ -329,6 +320,14 @@ public class ResultActivity extends BaseActivity {
         wkLine.setTotalVolume(0);
         //View重新调用一次draw
         wkLine.invalidate();
+
+        currentPrice.setText("");
+        openPrice.setText("");
+        closePrice.setText("");
+        highPrice.setText("");
+        lowestPrice.setText("");
+        mKLine.setDate(CommonUtils.dateToStringFormat(new Date()));
+        setSubtitle(CommonUtils.dateToStringFormat(new Date()));
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -351,9 +350,9 @@ public class ResultActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(MessageEvent event) {
         KLine kLine = event.getkLine();
+        mKLine = kLine;
         TransactionDetail td = event.getTd();
         setKLineData(kLine,td);
         initActionBar(kLine);
-        mKLine = kLine;
     }
 }
