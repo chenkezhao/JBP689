@@ -39,6 +39,7 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -287,21 +288,22 @@ public class ResultActivity extends BaseActivity {
         setTransactionDetail(td);
         if(mKLine.getTotalVolume()!=0){
             DecimalFormat df = new DecimalFormat("0.00");
+            DecimalFormat dfPrice = new DecimalFormat("#,###");
             if(mKLine.isRed()){
-                totalVolume.setText("总成交量("+unit+")："+mKLine.getTotalVolume()+"（100%）");
-                upVolume.setText("收盘价->最高价 成交量("+unit+")-上："+mKLine.getUpVolume()+"（"+df.format(mKLine.getUpVolume()*100.0/mKLine.getTotalVolume())+"%）");
-                middleVolume.setText("收盘价->开盘价 成交量("+unit+")-中："+mKLine.getMiddleVolume()+"（"+df.format(mKLine.getMiddleVolume()*100.0/mKLine.getTotalVolume())+"%）");
-                downVolume.setText("开盘价->最低价 成交量("+unit+")-下："+mKLine.getDownVolume()+"（"+df.format(mKLine.getDownVolume()*100.0/mKLine.getTotalVolume())+"%）");
+                totalVolume.setText("总成交量："+dfPrice.format(mKLine.getTotalVolume())+unit+"（100%）");
+                upVolume.setText("收盘到最高价之间的成交量-上："+dfPrice.format(mKLine.getUpVolume())+unit+"（"+df.format(mKLine.getUpVolume()*100.0/mKLine.getTotalVolume())+"%）");
+                middleVolume.setText("收盘到开盘价之间的成交量-中："+dfPrice.format(mKLine.getMiddleVolume())+unit+"（"+df.format(mKLine.getMiddleVolume()*100.0/mKLine.getTotalVolume())+"%）");
+                downVolume.setText("开盘到最低价之间的成交量-下："+dfPrice.format(mKLine.getDownVolume())+unit+"（"+df.format(mKLine.getDownVolume()*100.0/mKLine.getTotalVolume())+"%）");
                 totalVolume.setTextColor(0xffff0000);
                 upVolume.setTextColor(0xffff0000);
                 middleVolume.setTextColor(0xffff0000);
                 downVolume.setTextColor(0xffff0000);
                 wkLine.setkLineColor(0xffff0000);
             }else{
-                totalVolume.setText("总成交量("+unit+")："+mKLine.getTotalVolume()+"（100%）");
-                upVolume.setText("开盘价->最高价 成交量("+unit+")-上："+mKLine.getUpVolume()+"（"+df.format(mKLine.getUpVolume()*100.0/mKLine.getTotalVolume())+"%）");
-                middleVolume.setText("开盘价->收盘价 成交量("+unit+")-中："+mKLine.getMiddleVolume()+"（"+df.format(mKLine.getMiddleVolume()*100.0/mKLine.getTotalVolume())+"%）");
-                downVolume.setText("收盘价->最低价 成交量("+unit+")-下："+mKLine.getDownVolume()+"（"+df.format(mKLine.getDownVolume()*100.0/mKLine.getTotalVolume())+"%）");
+                totalVolume.setText("总成交量："+dfPrice.format(mKLine.getTotalVolume())+unit+"（100%）");
+                upVolume.setText("开盘到最高价之间的成交量-上："+dfPrice.format(mKLine.getUpVolume())+unit+"（"+df.format(mKLine.getUpVolume()*100.0/mKLine.getTotalVolume())+"%）");
+                middleVolume.setText("开盘到收盘价之间的成交量-中："+dfPrice.format(mKLine.getMiddleVolume())+unit+"（"+df.format(mKLine.getMiddleVolume()*100.0/mKLine.getTotalVolume())+"%）");
+                downVolume.setText("收盘到最低价之间的成交量-下："+dfPrice.format(mKLine.getDownVolume())+unit+"（"+df.format(mKLine.getDownVolume()*100.0/mKLine.getTotalVolume())+"%）");
                 totalVolume.setTextColor(0xFF005A00);
                 upVolume.setTextColor(0xFF005A00);
                 middleVolume.setTextColor(0xFF005A00);
