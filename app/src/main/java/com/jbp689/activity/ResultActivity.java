@@ -1,16 +1,13 @@
 package com.jbp689.activity;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -18,7 +15,6 @@ import android.widget.Toast;
 
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.codetroopers.betterpickers.calendardatepicker.MonthAdapter;
-import com.codetroopers.betterpickers.datepicker.DatePickerDialogFragment;
 import com.jbp689.JBPApplication;
 import com.jbp689.R;
 import com.jbp689.db.dao.KLineDao;
@@ -29,17 +25,13 @@ import com.jbp689.entity.TransactionDetail;
 import com.jbp689.utils.CommonUtils;
 import com.jbp689.utils.HtmlParseUtils;
 import com.jbp689.utils.MessageUtils;
-import com.jbp689.utils.StringUtils;
 import com.jbp689.utils.VolleyUtils;
 import com.jbp689.widgets.GestureListener;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
 
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -326,8 +318,6 @@ public class ResultActivity extends BaseActivity {
         closePrice.setText("");
         highPrice.setText("");
         lowestPrice.setText("");
-        mKLine.setDate(CommonUtils.dateToStringFormat(new Date()));
-        setSubtitle(CommonUtils.dateToStringFormat(new Date()));
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

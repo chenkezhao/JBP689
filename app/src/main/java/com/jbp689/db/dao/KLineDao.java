@@ -171,6 +171,9 @@ public class KLineDao  extends BaseDao{
     public String[] getAllCode(){
         try {
             List<DbModel> list = db.selector(KLine.class).select("distinct code,name").orderBy("code").findAll();
+            if(list==null){
+                return new String[]{};
+            }
             String codes[]= new String[list.size()];
             int len = list.size();
             for(int i=0;i<len;i++){
