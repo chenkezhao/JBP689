@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.Spinner;
 
 import com.jbp689.R;
 import com.jbp689.db.dao.KLineDao;
@@ -23,6 +23,7 @@ import com.jbp689.widgets.MyAutoCompleteTextView;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -32,12 +33,14 @@ public class MainActivity extends BaseActivity {
 
     private Button btnAnalysis;
     private MyAutoCompleteTextView etcode;
+    private Spinner spPrefix;
     private VolleyUtils mVolleyUtils;
     private String mCode;
     private String mDate;
     private HtmlParseUtils mHtmlParseUtils;
     private KLineDao kLineDao;
-    private String codes[];
+    private List<String> codes;
+    private String prefixs[]=new String[]{"sh","sz"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +55,24 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initView(){
+        spPrefix = (Spinner) findViewById(R.id.sp_prefix);
+        ArrayAdapter<String> prefixAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, prefixs);
+        prefixAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spPrefix .setAdapter(prefixAdapter);
+        spPrefix.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                getCodesData(prefixs[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         btnAnalysis = (Button) findViewById(R.id.btn_analysis);
         etcode = (MyAutoCompleteTextView) findViewById(R.id.et_code);
-        codes = kLineDao.getAllCode();
+        getCodesData((String) spPrefix.getSelectedItem());
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_dropdown_item_1line, codes);
         etcode.setAdapter(adapter);
@@ -68,17 +86,20 @@ public class MainActivity extends BaseActivity {
                     return;
                 }
                 //验证模板
-                String pattern = "^(sh|sz)[0-9]{6}$";
+//                String pattern = "^(sh|sz)[0-9]{6}$";
+                String pattern = "^[0-9]{6}$";
                 // 创建 Pattern 对象
                 Pattern r = Pattern.compile(pattern);
                 // 现在创建 matcher 对象
                 Matcher m = r.matcher(code);
                 if (m.find()) {
-                    mCode = code;
+                    String prefix = (String) spPrefix.getSelectedItem();
+                    mCode = prefix+code;
                     mDate = CommonUtils.dateToStringFormat(new Date());
 //                  getTransactionDetail(code);//方式一
 //                  nmHtmlParseUtils.parseTradeHistory(new KLine(code),"2017-01-06");//方式二
-                    queryTradeHistory(mCode,mDate);//方式三
+                    //今日
+                    mVolleyUtils.getTransactionDetail(mCode);//方式一
                 }else{
                     etcode.setError("输入格式不正确！");
                     return;
@@ -87,21 +108,17 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    /**
-     * 方式三
-     * @param code
-     * @return
-     */
-    private void queryTradeHistory(final String code, final String date){
-        MessageUtils.getInstance().showProgressDialog(MainActivity.this,"系统提示", "数据下载分析中...");
-        if(CommonUtils.dateToStringFormat(new Date()).equals(date)){
-            //今日
-            mVolleyUtils.getTransactionDetail(code);//方式一
-        }else{
-            //历史
-            mHtmlParseUtils.parseTradeHistory(code,date,null);
+    private void getCodesData(String prefix){
+        if(codes==null){
+            codes = new ArrayList<String>();
         }
+        codes.clear();
+        codes.addAll(kLineDao.getAllCode(prefix));
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line, codes);
+        etcode.setAdapter(adapter);
     }
+
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)

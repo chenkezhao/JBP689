@@ -17,22 +17,31 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/l_code"
+            <com.zhy.autolayout.AutoLinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.jbp689.widgets.MyAutoCompleteTextView
-                    android:id="@+id/et_code"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Spinner
+                    android:id="@+id/sp_prefix"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"/>
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/l_code"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:completionHint="本地数据（上下滑动）"
-                    android:completionThreshold="1"
-                    android:dropDownHeight="350px"
-                    android:completionHintView="@layout/hint_auto_textview"
-                    android:hint="格式：前缀(sh|sz)+股票代码。例：sz002259"/>
-            </android.support.design.widget.TextInputLayout>
-
+                    android:orientation="horizontal">
+                    <com.jbp689.widgets.MyAutoCompleteTextView
+                        android:id="@+id/et_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:completionHint="本地数据（上下滑动）"
+                        android:completionThreshold="1"
+                        android:dropDownHeight="350px"
+                        android:completionHintView="@layout/hint_auto_textview"
+                        android:inputType="number"
+                        android:hint="股票代码"/>
+                </android.support.design.widget.TextInputLayout>
+            </com.zhy.autolayout.AutoLinearLayout>
             <Button
                 android:id="@+id/btn_analysis"
                 android:layout_width="match_parent"

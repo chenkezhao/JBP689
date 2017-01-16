@@ -2,7 +2,6 @@ package com.jbp689.widgets;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -134,9 +133,19 @@ public class KLine extends View{
         textPaint.setColor(kLineColor);
         textPaint.setTextAlign(Paint.Align.CENTER);
         DecimalFormat df1 = new DecimalFormat("0.00");
-        canvas.drawText(df1.format(upVolume*100.0/totalVolume)+"%", screenWidth/4,tempTop/2+startHeight, textPaint);
-        canvas.drawText(df1.format(middleVolume*100.0/totalVolume)+"%", screenWidth*3/4,tempBotton-(tempBotton-tempTop)/2+startHeight, textPaint);
-        canvas.drawText(df1.format(downVolume*100.0/totalVolume)+"%", screenWidth/4,endHeight-((viewHeight-tempBotton)/2), textPaint);
+        DecimalFormat dfPrice = new DecimalFormat("#,###");
+        String  unit = "手";
+        canvas.drawText(dfPrice.format(upVolume)+unit+"("+df1.format(upVolume*100.0/totalVolume)+"%)", screenWidth/4,tempTop/2+startHeight, textPaint);
+        canvas.drawText(dfPrice.format(middleVolume)+unit+"("+df1.format(middleVolume*100.0/totalVolume)+"%)", screenWidth*3/4,tempBotton-(tempBotton-tempTop)/2+startHeight, textPaint);
+        canvas.drawText(dfPrice.format(downVolume)+unit+"("+df1.format(downVolume*100.0/totalVolume)+"%)", screenWidth/4,endHeight-((viewHeight-tempBotton)/2), textPaint);
+
+        textPaint.setColor(JBPApplication.getInstance().getResources().getColor(R.color.colorAccent));
+        textPaint.setFakeBoldText(true);
+        if(kLineColor==0xffff0000){
+            canvas.drawText("开盘", (screenWidth/2)+50,bottom+30, textPaint);
+        }else{
+            canvas.drawText("开盘", (screenWidth/2)+50,top-30, textPaint);
+        }
     }
 
     public long getTotalVolume() {

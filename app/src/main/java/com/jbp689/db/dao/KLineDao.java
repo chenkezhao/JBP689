@@ -8,6 +8,7 @@ import org.xutils.db.sqlite.WhereBuilder;
 import org.xutils.db.table.DbModel;
 import org.xutils.ex.DbException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -168,16 +169,15 @@ public class KLineDao  extends BaseDao{
         return null;
     }
 
-    public String[] getAllCode(){
+    public List<String> getAllCode(String prefix){
         try {
-            List<DbModel> list = db.selector(KLine.class).select("distinct code,name").orderBy("code").findAll();
-            if(list==null){
-                return new String[]{};
-            }
-            String codes[]= new String[list.size()];
-            int len = list.size();
-            for(int i=0;i<len;i++){
-                codes[i] = list.get(i).getString("CODE")+"-"+list.get(i).getString("NAME");
+            List<DbModel> list = db.selector(KLine.class).select("distinct code,name").where("code","like",prefix+"%").orderBy("code").findAll();
+            List<String> codes= new ArrayList<String>();
+            for(DbModel d:list){
+                String code = d.getString("CODE");
+                code = code.substring(2);
+                code = code+"-"+d.getString("NAME");
+                codes.add(code);
             }
             return codes;
         } catch (DbException e) {

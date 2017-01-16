@@ -87,11 +87,12 @@ public class VolleyUtils {
 			@Override
 			public void onResponse(String response) {
 				String temp =response.substring(response.indexOf("\"")+1,response.lastIndexOf("\""));
-				if(temp.trim().length()==0){
+				String[] arr = temp.trim().split(",");
+				if(arr.length<10){
+					MessageUtils.getInstance().closeProgressDialog();
 					Toast.makeText(JBPApplication.getInstance(),"该股票代码不存在！",Toast.LENGTH_LONG).show();
 					return;
 				}
-				String[] arr = temp.split(",");
 				TransactionDetail td = new TransactionDetail();
 				td.setName(arr[0]);
 				td.setOpenPrice(Double.parseDouble(arr[1]));

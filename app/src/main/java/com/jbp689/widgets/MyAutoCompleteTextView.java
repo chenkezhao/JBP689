@@ -36,7 +36,7 @@ public class MyAutoCompleteTextView extends AutoCompleteTextView {
 
     @Override
     protected void replaceText(CharSequence text) {
-        text=((String)text).substring(0,8);
+        text=((String)text).substring(0,6);
         super.replaceText(text);
     }
 }

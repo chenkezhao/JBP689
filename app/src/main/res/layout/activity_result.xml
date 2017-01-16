@@ -13,31 +13,11 @@
         android:orientation="vertical"
         tools:context="com.jbp689.activity.ResultActivity">
 
-        <com.zhy.autolayout.AutoLinearLayout
+        <TextView
+            android:id="@+id/tv_totalVolume"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:padding="24px"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/tv_totalVolume"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:id="@+id/tv_upVolume"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:id="@+id/tv_middleVolume"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:id="@+id/tv_downVolume"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </com.zhy.autolayout.AutoLinearLayout>
+            android:layout_height="wrap_content"/>
 
         <com.jbp689.widgets.KLine
             android:id="@+id/w_kLine"

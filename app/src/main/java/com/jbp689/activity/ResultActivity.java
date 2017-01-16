@@ -40,9 +40,6 @@ public class ResultActivity extends BaseActivity {
     private KLine mKLine;
     private TransactionDetail mTransactionDetail;
     private TextView totalVolume;
-    private TextView upVolume;
-    private TextView middleVolume;
-    private TextView downVolume;
     private com.jbp689.widgets.KLine wkLine;
     private String  unit = "手";
     private FloatingActionButton fabChangeDate;
@@ -95,9 +92,6 @@ public class ResultActivity extends BaseActivity {
         highPrice= (TextView) findViewById(R.id.tv_highPrice);
         lowestPrice= (TextView) findViewById(R.id.tv_lowestPrice);
         totalVolume = (TextView) findViewById(R.id.tv_totalVolume);
-        upVolume = (TextView) findViewById(R.id.tv_upVolume);
-        middleVolume = (TextView) findViewById(R.id.tv_middleVolume);
-        downVolume = (TextView) findViewById(R.id.tv_downVolume);
         wkLine = (com.jbp689.widgets.KLine)findViewById(R.id.w_kLine);
         wkLine.setLongClickable(true);
         wkLine.setOnTouchListener(new MyGestureListener(this));
@@ -267,23 +261,11 @@ public class ResultActivity extends BaseActivity {
             DecimalFormat dfPrice = new DecimalFormat("#,###");
             if(mKLine.isRed()){
                 totalVolume.setText("总成交量："+dfPrice.format(mKLine.getTotalVolume())+unit+"（100%）");
-                upVolume.setText("收盘到最高价之间的成交量-上："+dfPrice.format(mKLine.getUpVolume())+unit+"（"+df.format(mKLine.getUpVolume()*100.0/mKLine.getTotalVolume())+"%）");
-                middleVolume.setText("收盘到开盘价之间的成交量-中："+dfPrice.format(mKLine.getMiddleVolume())+unit+"（"+df.format(mKLine.getMiddleVolume()*100.0/mKLine.getTotalVolume())+"%）");
-                downVolume.setText("开盘到最低价之间的成交量-下："+dfPrice.format(mKLine.getDownVolume())+unit+"（"+df.format(mKLine.getDownVolume()*100.0/mKLine.getTotalVolume())+"%）");
                 totalVolume.setTextColor(0xffff0000);
-                upVolume.setTextColor(0xffff0000);
-                middleVolume.setTextColor(0xffff0000);
-                downVolume.setTextColor(0xffff0000);
                 wkLine.setkLineColor(0xffff0000);
             }else{
                 totalVolume.setText("总成交量："+dfPrice.format(mKLine.getTotalVolume())+unit+"（100%）");
-                upVolume.setText("开盘到最高价之间的成交量-上："+dfPrice.format(mKLine.getUpVolume())+unit+"（"+df.format(mKLine.getUpVolume()*100.0/mKLine.getTotalVolume())+"%）");
-                middleVolume.setText("开盘到收盘价之间的成交量-中："+dfPrice.format(mKLine.getMiddleVolume())+unit+"（"+df.format(mKLine.getMiddleVolume()*100.0/mKLine.getTotalVolume())+"%）");
-                downVolume.setText("收盘到最低价之间的成交量-下："+dfPrice.format(mKLine.getDownVolume())+unit+"（"+df.format(mKLine.getDownVolume()*100.0/mKLine.getTotalVolume())+"%）");
                 totalVolume.setTextColor(0xFF005A00);
-                upVolume.setTextColor(0xFF005A00);
-                middleVolume.setTextColor(0xFF005A00);
-                downVolume.setTextColor(0xFF005A00);
                 wkLine.setkLineColor(0xFF005A00);
             }
             wkLine.setTotalVolume(mKLine.getTotalVolume());
@@ -306,9 +288,6 @@ public class ResultActivity extends BaseActivity {
     private void setNullData(String msg){
         totalVolume.setText(msg);
         totalVolume.setTextColor(0xffff0000);
-        upVolume.setText("");
-        middleVolume.setText("");
-        downVolume.setText("");
         wkLine.setTotalVolume(0);
         //View重新调用一次draw
         wkLine.invalidate();
