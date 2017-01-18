@@ -257,7 +257,6 @@ public class ResultActivity extends BaseActivity {
     private void setKLineData(KLine mKLine,TransactionDetail td){
         MessageUtils.getInstance().closeProgressDialog();
         if(mKLine.getTotalVolume()!=0){
-            DecimalFormat df = new DecimalFormat("0.00");
             DecimalFormat dfPrice = new DecimalFormat("#,###");
             if(mKLine.isRed()){
                 totalVolume.setText("总成交量："+dfPrice.format(mKLine.getTotalVolume())+unit+"（100%）");
@@ -302,9 +301,12 @@ public class ResultActivity extends BaseActivity {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(CommonUtils.dateToFormat(today));
         calendar.set(Calendar.DATE,calendar.get(Calendar.DATE)-1);
-        if(calendar.getTime().getTime()==CommonUtils.dateToFormat(mKLine.getDate()).getTime()){
-            mKLine.setDate(CommonUtils.dateToStringFormat(today));
-            setSubtitle(CommonUtils.dateToStringFormat(today));
+        Date date = CommonUtils.dateToFormat(mKLine.getDate());
+        if(date!=null){
+            if(calendar.getTime().getTime()==date.getTime()){
+                mKLine.setDate(CommonUtils.dateToStringFormat(today));
+                setSubtitle(CommonUtils.dateToStringFormat(today));
+            }
         }
     }
     @Override
