@@ -24,16 +24,19 @@ public class KLine extends EntityBase {
 	private boolean	isRed;			// 是否阳线
 	@Column(name = "DATE")
 	private String	date;			// 日期
+	@Column(name = "TURNOVER")
+	private String	turnover;		// 换手率
 
-	public KLine() {
+	public KLine(){
 	}
-	public KLine(String code) {
+
+	public KLine(String code){
 		this.code = code;
 	}
-	public KLine(boolean isRed) {
+
+	public KLine(boolean isRed){
 		this.isRed = isRed;
 	}
-
 
 	public String getCode() {
 		return code;
@@ -97,5 +100,13 @@ public class KLine extends EntityBase {
 
 	public void setRed(boolean red) {
 		isRed = red;
+	}
+
+	public String getTurnover() {
+		return turnover;
+	}
+
+	public void setTurnover(String turnover) {
+		this.turnover = turnover;
 	}
 }
