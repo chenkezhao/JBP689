@@ -297,6 +297,15 @@ public class ResultActivity extends BaseActivity {
         closePrice.setText("");
         highPrice.setText("");
         lowestPrice.setText("");
+
+        Date today = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(CommonUtils.dateToFormat(today));
+        calendar.set(Calendar.DATE,calendar.get(Calendar.DATE)-1);
+        if(calendar.getTime().getTime()==CommonUtils.dateToFormat(mKLine.getDate()).getTime()){
+            mKLine.setDate(CommonUtils.dateToStringFormat(today));
+            setSubtitle(CommonUtils.dateToStringFormat(today));
+        }
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
