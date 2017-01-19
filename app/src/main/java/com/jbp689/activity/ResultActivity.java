@@ -41,7 +41,6 @@ public class ResultActivity extends BaseActivity {
     private TransactionDetail mTransactionDetail;
     private TextView totalVolume;
     private com.jbp689.widgets.KLine wkLine;
-    private String  unit = "手";
     private FloatingActionButton fabChangeDate;
     private final int CALENDAR_ID=689;
     private String mDate;
@@ -258,12 +257,11 @@ public class ResultActivity extends BaseActivity {
         MessageUtils.getInstance().closeProgressDialog();
         if(mKLine.getTotalVolume()!=0){
             DecimalFormat dfPrice = new DecimalFormat("#,###");
+            totalVolume.setText("总成交量："+dfPrice.format(mKLine.getTotalVolume())+"股（100%），换手率："+td.getTurnover());
             if(mKLine.isRed()){
-                totalVolume.setText("总成交量："+dfPrice.format(mKLine.getTotalVolume())+unit+"（100%）");
                 totalVolume.setTextColor(0xffff0000);
                 wkLine.setkLineColor(0xffff0000);
             }else{
-                totalVolume.setText("总成交量："+dfPrice.format(mKLine.getTotalVolume())+unit+"（100%）");
                 totalVolume.setTextColor(0xFF005A00);
                 wkLine.setkLineColor(0xFF005A00);
             }

@@ -1,16 +1,16 @@
 package com.jbp689.utils;
 
 import android.widget.Toast;
+
 import com.jbp689.JBPApplication;
-import com.jbp689.db.dao.KLineDao;
-import com.jbp689.db.dao.TransactionDetailDao;
 import com.jbp689.entity.KLine;
-import com.jbp689.entity.MessageEvent;
 import com.jbp689.entity.TransactionDetail;
+
 import org.greenrobot.eventbus.EventBus;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -60,13 +60,7 @@ public class CommonUtils {
                 //解析excel文件
 //                KLine kLine = JExcelApiUtils.readSinaTradehistoryXls(result,new KLine(isRed),td);
 				KLine kLine = readSinaTradehistoryTxt(result,new KLine(isRed),td);
-				MessageEvent event = new MessageEvent(kLine,td);
-                EventBus.getDefault().post(event);
-				if(kLine.getTotalVolume()!=0){
-					//保存历史到数据
-					TransactionDetailDao.getInstance().insert(td);
-					KLineDao.getInstance().insert(kLine);
-				}
+				new VolleyUtils(JBPApplication.getInstance()).getCompanyInfo(kLine,td,td.getCode(),true);
 			}
 
 			@Override
@@ -152,10 +146,10 @@ public class CommonUtils {
 				}
 			}
 			kLine.setCode(td.getCode());
-			kLine.setUpVolume(upVolume);
-			kLine.setMiddleVolume(middleVolume);
-			kLine.setDownVolume(downVolume);
-			kLine.setTotalVolume(totalVolume);
+			kLine.setUpVolume(upVolume*100);
+			kLine.setMiddleVolume(middleVolume*100);
+			kLine.setDownVolume(downVolume*100);
+			kLine.setTotalVolume(totalVolume*100);
 			kLine.setName(td.getName());
 			kLine.setDate(td.getDate());
 			if(reader!=null){

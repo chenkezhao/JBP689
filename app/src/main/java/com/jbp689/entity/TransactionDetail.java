@@ -27,6 +27,8 @@ public class TransactionDetail extends EntityBase{
 	private double	range;			// 涨跌幅
 	@Column(name = "DATE")
 	private String	date;			// 日期+时间
+	@Column(name = "TURNOVER")
+	private String	turnover;		// 换手率
 
 	public String getCode() {
 		return code;
@@ -98,5 +100,13 @@ public class TransactionDetail extends EntityBase{
 
 	public void setDate(String date) {
 		this.date = date;
+	}
+
+	public String getTurnover() {
+		return turnover;
+	}
+
+	public void setTurnover(String turnover) {
+		this.turnover = turnover;
 	}
 }

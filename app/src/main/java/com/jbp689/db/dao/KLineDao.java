@@ -173,6 +173,9 @@ public class KLineDao  extends BaseDao{
         try {
             List<DbModel> list = db.selector(KLine.class).select("distinct code,name").where("code","like",prefix+"%").orderBy("code").findAll();
             List<String> codes= new ArrayList<String>();
+            if(list==null){
+                return codes;
+            }
             for(DbModel d:list){
                 String code = d.getString("CODE");
                 code = code.substring(2);

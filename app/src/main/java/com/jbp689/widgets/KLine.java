@@ -134,7 +134,7 @@ public class KLine extends View{
         textPaint.setTextAlign(Paint.Align.CENTER);
         DecimalFormat df1 = new DecimalFormat("0.00");
         DecimalFormat dfPrice = new DecimalFormat("#,###");
-        String  unit = "手";
+        String  unit = "股";
         canvas.drawText(dfPrice.format(upVolume)+unit+"("+df1.format(upVolume*100.0/totalVolume)+"%)", screenWidth/4,tempTop/2+startHeight, textPaint);
         canvas.drawText(dfPrice.format(middleVolume)+unit+"("+df1.format(middleVolume*100.0/totalVolume)+"%)", screenWidth*3/4,tempBotton-(tempBotton-tempTop)/2+startHeight, textPaint);
         canvas.drawText(dfPrice.format(downVolume)+unit+"("+df1.format(downVolume*100.0/totalVolume)+"%)", screenWidth/4,endHeight-((viewHeight-tempBotton)/2), textPaint);

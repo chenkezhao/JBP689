@@ -13,7 +13,7 @@ public class KLine extends EntityBase {
 	@Column(name = "CODE")
 	private String	code;			// 股票代码
 	@Column(name = "TOTALVOLUME")
-	private long	totalVolume;	// 总成交量
+	private long	totalVolume;	// 总成交量，单位：股
 	@Column(name = "UPVOLUME")
 	private long	upVolume;		// K线上部分
 	@Column(name = "MIDDLEVOLUME")
@@ -24,8 +24,6 @@ public class KLine extends EntityBase {
 	private boolean	isRed;			// 是否阳线
 	@Column(name = "DATE")
 	private String	date;			// 日期
-	@Column(name = "TURNOVER")
-	private String	turnover;		// 换手率
 
 	public KLine(){
 	}
@@ -102,11 +100,4 @@ public class KLine extends EntityBase {
 		isRed = red;
 	}
 
-	public String getTurnover() {
-		return turnover;
-	}
-
-	public void setTurnover(String turnover) {
-		this.turnover = turnover;
-	}
 }

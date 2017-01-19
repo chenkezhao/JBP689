@@ -15,6 +15,8 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.jbp689.JBPApplication;
+import com.jbp689.db.dao.KLineDao;
+import com.jbp689.db.dao.TransactionDetailDao;
 import com.jbp689.entity.KLine;
 import com.jbp689.entity.MessageEvent;
 import com.jbp689.entity.TransactionDetail;
@@ -22,6 +24,7 @@ import com.jbp689.entity.TransactionDetail;
 import org.greenrobot.eventbus.EventBus;
 
 import java.nio.charset.Charset;
+import java.text.DecimalFormat;
 import java.util.Date;
 
 /**
@@ -124,8 +127,36 @@ public class VolleyUtils {
 				byte[] b = response.getBytes(Charset.forName("utf-8"));
 				String html = new String(b);
 				KLine kLine = new HtmlParseUtils().parseKLine(html,td,new KLine(code));
+				getCompanyInfo(kLine,td,code,false);
+			}
+		});
+	}
+
+	/**
+	 * 获取公司信息，主要是换手率
+	 * @param kLine
+	 * @param td
+	 * @param code
+     */
+	public void getCompanyInfo(final KLine kLine, final TransactionDetail td, String code, final boolean isHistory){
+		String url = "http://finance.sina.com.cn/realstock/company/"+code+"/jsvar.js";
+		stringRequest(url, new Response.Listener<String>() {
+			@Override
+			public void onResponse(String response) {
+				byte[] b = response.getBytes(Charset.forName("utf-8"));
+				String html = new String(b);
+				html= html.substring(html.indexOf("var currcapital = ")+"var currcapital = ".length(),html.indexOf("; //流通股本"));
+				DecimalFormat df = new DecimalFormat("0.00");
+				String turnover = df.format((kLine.getTotalVolume()*1.00/(Double.parseDouble(html)*10000))*100)+"%";
+				td.setTurnover(turnover);
 				MessageEvent event = new MessageEvent(kLine,td);
 				EventBus.getDefault().post(event);
+
+				if(kLine.getTotalVolume()!=0 && isHistory){
+					//保存历史到数据
+					TransactionDetailDao.getInstance().insert(td);
+					KLineDao.getInstance().insert(kLine);
+				}
 			}
 		});
 	}
