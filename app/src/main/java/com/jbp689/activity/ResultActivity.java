@@ -257,7 +257,7 @@ public class ResultActivity extends BaseActivity {
         MessageUtils.getInstance().closeProgressDialog();
         if(mKLine.getTotalVolume()!=0){
             DecimalFormat dfPrice = new DecimalFormat("#,###");
-            totalVolume.setText("总成交量："+dfPrice.format(mKLine.getTotalVolume())+"股（100%），换手率："+td.getTurnover());
+            totalVolume.setText("总成交量："+dfPrice.format(mKLine.getTotalVolume()*1.00/100.0)+"手（100%），换手率："+td.getTurnover());
             if(mKLine.isRed()){
                 totalVolume.setTextColor(0xffff0000);
                 wkLine.setkLineColor(0xffff0000);
