@@ -146,6 +146,8 @@ public class KLine extends View{
         }else{
             canvas.drawText("开盘", (screenWidth/2)+50,top-30, textPaint);
         }
+        textPaint.setColor(JBPApplication.getInstance().getResources().getColor(R.color.colorTextPrimary));
+        canvas.drawText("成交量K线：", 100,50, textPaint);
     }
 
     public long getTotalVolume() {
