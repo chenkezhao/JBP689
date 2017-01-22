@@ -51,7 +51,14 @@ public class MainActivity extends BaseActivity {
         setSubtitle("sh:上海上市的股票，sz:深圳上市的股票");
         mVolleyUtils = new VolleyUtils(MainActivity.this);
         kLineDao = KLineDao.getInstance();
+        codes = new ArrayList<String>();
         initView();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getCodesData((String) spPrefix.getSelectedItem());
     }
 
     private void initView(){
@@ -70,12 +77,8 @@ public class MainActivity extends BaseActivity {
 
             }
         });
-        btnAnalysis = (Button) findViewById(R.id.btn_analysis);
         etcode = (MyAutoCompleteTextView) findViewById(R.id.et_code);
-        getCodesData((String) spPrefix.getSelectedItem());
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line, codes);
-        etcode.setAdapter(adapter);
+        btnAnalysis = (Button) findViewById(R.id.btn_analysis);
         btnAnalysis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
