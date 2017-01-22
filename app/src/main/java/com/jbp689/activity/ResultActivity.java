@@ -74,6 +74,7 @@ public class ResultActivity extends BaseActivity {
             totalVolume.setText("今天是周未！");
             totalVolume.setTextColor(0xffff0000);
             setSubtitle("今日");
+            mKLine.setDate(CommonUtils.dateToStringFormat(new Date()));
             return;
         }
         setKLineData(mKLine,mTransactionDetail);
