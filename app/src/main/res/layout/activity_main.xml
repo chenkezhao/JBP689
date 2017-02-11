@@ -49,4 +49,12 @@
                 android:text="开始分析"/>
         </com.zhy.autolayout.AutoLinearLayout>
     </ScrollView>
+    <TextView
+        android:id="@+id/tv_copyrightInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:text="版权信息"
+        android:layout_marginBottom="24px"/>
 </RelativeLayout>

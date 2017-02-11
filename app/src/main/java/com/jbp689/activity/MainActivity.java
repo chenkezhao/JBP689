@@ -2,11 +2,13 @@ package com.jbp689.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.jbp689.R;
 import com.jbp689.db.dao.KLineDao;
@@ -41,6 +43,7 @@ public class MainActivity extends BaseActivity {
     private KLineDao kLineDao;
     private List<String> codes;
     private String prefixs[]=new String[]{"sh","sz"};
+    private TextView tv_copyrightInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +113,11 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
+        tv_copyrightInfo = (TextView) findViewById(R.id.tv_copyrightInfo);
+        tv_copyrightInfo.setText(Html.fromHtml("<div style=\"padding: 24px;color: #FFFFFF\">\n" +
+                "Copyright © &nbsp;&nbsp;2017&nbsp; 陈科肇 ALL RIGHT RESERVED<br>\n" +
+                "联系方式：<font class=\"email\">310771881@qq.com</font>\n" +
+                "</div>"));
     }
 
     private void getCodesData(String prefix){
