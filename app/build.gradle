@@ -13,7 +13,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -37,4 +37,6 @@ dependencies {
     compile files('libs/jxl.jar')
     /*日期控件*/
     compile 'com.code-troopers.betterpickers:library:3.1.0'
+    /*友盟应用统计*/
+    compile 'com.umeng.analytics:analytics:latest.integration'
 }
