@@ -115,7 +115,7 @@ public class MainActivity extends BaseActivity {
         });
         tv_copyrightInfo = (TextView) findViewById(R.id.tv_copyrightInfo);
         tv_copyrightInfo.setText(Html.fromHtml("<div style=\"padding: 24px;color: #FFFFFF\">\n" +
-                "Copyright © &nbsp;&nbsp;2017&nbsp; 陈科肇 ALL RIGHT RESERVED<br>\n" +
+                "Copyright © &nbsp;&nbsp;2017&nbsp; 陈科肇 All rights reserved.<br>\n" +
                 "联系方式：<font class=\"email\">310771881@qq.com</font>\n" +
                 "</div>"));
     }
