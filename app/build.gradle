@@ -7,14 +7,57 @@ android {
         applicationId "com.jbp689"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    /**
+     * 多渠道配置:动态设定App名称，应用图标，背景图片，状态栏颜色。
+     * 1.applicationId不一致，避免了覆盖安装；
+     * 2.针对不同的商家 App名称，图标得使用manifestPlaceholders，manifestPlaceholders是一个类似HashMap的容器；
+     * 3.defaultConfig{}    默认配置，是ProductFlavor类型。它共享给其他ProductFlavor使用；
+     *
+     *
+     */
+    productFlavors {
+        /**
+         * 百度-百度手机助手
+         * http://app.baidu.com/serve/
+         */
+        BAIDU_ZHUSHO {
+            manifestPlaceholders = [umeng_channel: "baiduzs"]
+        }
+        /**
+         * 百度-91市场
+         * http://app.baidu.com/serve/
+         */
+        BAIDU_91 {
+            manifestPlaceholders = [umeng_channel: "baidu91"]
+        }
+        /**
+         * 百度-android市场
+         * http://app.baidu.com/serve/
+         */
+        BAIDU_ANDROID {
+            manifestPlaceholders = [umeng_channel: "baiduandroid"]
+        }
+    }
+
+
+    signingConfigs {
+        release {
+            storeFile file("E:\\0Develop\\work\\gitHub\\JBP689\\app\\jbp689.jks")
+            storePassword "536182947jbp689@"
+            keyAlias "陈科肇"
+            keyPassword "536182947jbp689@"
+            v2SigningEnabled true
+        }
     }
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -24,10 +67,10 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:appcompat-v7:25.2.0'
     testCompile 'junit:junit:4.12'
     compile 'com.zhy:autolayout:1.4.5'
-    compile 'com.android.support:design:25.1.0'
+    compile 'com.android.support:design:25.2.0'
     /*https://github.com/smanikandan14/Volley-demo*/
     compile 'com.mcxiaoke.volley:library:1.0.19'
     /*HTML解析*/

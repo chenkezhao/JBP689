@@ -27,9 +27,13 @@
             android:name="design_height"
             android:value="1920"></meta-data>
 
+        <meta-data
+            android:name="umeng_channel"
+            android:value="${umeng_channel}"/>
+
 
         <meta-data android:value="58a3cbcbf5ade451d20017aa" android:name="UMENG_APPKEY"/>
-        <meta-data android:value="jbp6891.0" android:name="UMENG_CHANNEL"/>
+        <meta-data android:value="${umeng_channel}" android:name="UMENG_CHANNEL"/>
 
         <activity
             android:name=".activity.MainActivity"
