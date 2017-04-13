@@ -39,14 +39,14 @@ public class MessageUtils {
         });
     }
 
-    public void showProgressDialog(Context context,String title, String msg){
+    public void showProgressDialog(Context context,String title, String msg,boolean cancel){
         if(title==null){
             title= "系统提示";
         }
         if (msg==null){
             msg="Loading...";
         }
-        progressDialog = ProgressDialog.show(context,title, msg, true, false);
+        progressDialog = ProgressDialog.show(context,title, msg, true, cancel);
     }
 
     public void closeProgressDialog(){

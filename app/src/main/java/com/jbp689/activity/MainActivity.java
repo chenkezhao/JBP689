@@ -105,7 +105,7 @@ public class MainActivity extends BaseActivity {
 //                  getTransactionDetail(code);//方式一
 //                  nmHtmlParseUtils.parseTradeHistory(new KLine(code),"2017-01-06");//方式二
                     //今日
-                    MessageUtils.getInstance().showProgressDialog(MainActivity.this,"系统提示", "数据下载分析中...");
+                    MessageUtils.getInstance().showProgressDialog(MainActivity.this,"系统提示", "数据下载分析中...",true);
                     mVolleyUtils.getTransactionDetail(mCode);//方式一
                 }else{
                     etcode.setError("输入格式不正确！");

@@ -238,7 +238,7 @@ public class HtmlParseUtils {
                 }else{
                     td = new TransactionDetail();
                     //历史
-                    Elements detailTrs = detail.child(1).select("table>tbody>tr");
+                    Elements detailTrs = detail.select("table>tbody>tr");
                     if(detailTrs.isEmpty()){
                         return;
                     }

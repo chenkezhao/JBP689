@@ -41,7 +41,7 @@ public class MyDatabase {
             Log.d(TAG, "Current daoConfig is null! It will be create now! ");
             daoConfig = new DbManager.DaoConfig()
                     .setDbName(dbName)  // db名称
-                    .setDbDir(new File(dbDir))  //  db存储路径
+//                    .setDbDir(new File(dbDir))  //  db存储路径
                     .setDbVersion(1)    // db版本号
                     .setAllowTransaction(true)  // 允许db使用事务
                     .setDbUpgradeListener(new MyDbUpgradeListener())    // db升级监听

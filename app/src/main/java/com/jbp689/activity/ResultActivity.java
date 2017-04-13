@@ -234,13 +234,16 @@ public class ResultActivity extends BaseActivity {
      * @return
      */
     private void queryTradeHistory(String code, String date){
-        MessageUtils.getInstance().showProgressDialog(ResultActivity.this,"系统提示", "数据下载分析中...");
+        MessageUtils.getInstance().showProgressDialog(ResultActivity.this,"系统提示", "数据下载分析中...",true);
         if(CommonUtils.dateToStringFormat(new Date()).equals(date)){
             //今日
             mVolleyUtils.getTransactionDetail(code);//方式一
         }else{
-            KLine kLine = KLineDao.getInstance().queryKLineIsExist(code,date);
-            if(kLine!=null){
+            KLineDao kLineDao =  KLineDao.getInstance();
+            TransactionDetailDao detailDao = TransactionDetailDao.getInstance();
+            KLine kLine =kLineDao.queryKLineIsExist(code,date);
+            TransactionDetail detail = detailDao.getTransactionDetailBy(code,date);
+            if(kLine!=null && detail!=null){
                 //本地
                 TransactionDetail td=transactionDetailDao.getTransactionDetailBy(code,date);
                 setKLineData(kLine,td);
@@ -249,6 +252,12 @@ public class ResultActivity extends BaseActivity {
 //                MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(ResultActivity.this),"本地获取历史成交明细！");
             }else{
                 //历史
+                if(kLine!=null){
+                    kLineDao.delete(kLine);
+                }
+                if(detail!=null){
+                    detailDao.delete(detail);
+                }
                 mHtmlParseUtils.parseTradeHistory(code,date,null);
             }
         }
