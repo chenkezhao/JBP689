@@ -21,6 +21,13 @@ android {
      */
     productFlavors {
         /**
+         * 应用宝
+         * http://app.baidu.com/serve/
+         */
+        QQ {
+            manifestPlaceholders = [umeng_channel: "qq"]
+        }
+        /**
          * 百度-百度手机助手
          * http://app.baidu.com/serve/
          */
