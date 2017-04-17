@@ -1,20 +1,19 @@
 package com.jbp689.activity;
 
-import android.Manifest;
-import android.annotation.TargetApi;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.jbp689.JBPApplication;
 import com.jbp689.entity.KLine;
 import com.jbp689.entity.MessageEvent;
 import com.jbp689.utils.MessageUtils;
+import com.jbp689.utils.PermissionHelper;
 import com.jbp689.utils.StringUtils;
 import com.umeng.analytics.MobclickAgent;
 
@@ -30,8 +29,10 @@ import org.xutils.x;
 
 public class BaseActivity extends AppCompatActivity{
 
-    final private int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 689;
+    private static final String TAG = "BaseActivity";
     private ActionBar mActionBar;
+    private PermissionHelper mPermissionHelper;
+    public boolean mustPermission = false;//用户是否允许了应用的必须权限
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,9 +43,30 @@ public class BaseActivity extends AppCompatActivity{
             mActionBar.setDisplayHomeAsUpEnabled(true);
             mActionBar.setDisplayShowHomeEnabled(false);
         }
-        //启动时检查权限
-        if(android.os.Build.VERSION.SDK_INT>=23){
-//            checkPermission();
+
+        // 当系统为6.0以上时，需要申请权限
+        mPermissionHelper = new PermissionHelper(this);
+        mPermissionHelper.setOnApplyPermissionListener(new PermissionHelper.OnApplyPermissionListener() {
+            @Override
+            public void onAfterApplyAllPermission() {
+                Log.i(TAG, "All of requested permissions has been granted, so run app logic.");
+                mustPermission = true;
+            }
+        });
+        if (Build.VERSION.SDK_INT < 23) {
+            // 如果系统版本低于23，直接跑应用的逻辑
+            Log.d(TAG, "The api level of system is lower than 23, so run app logic directly.");
+            mustPermission = true;
+        } else {
+            // 如果权限全部申请了，那就直接跑应用逻辑
+            if (mPermissionHelper.isAllRequestedPermissionGranted()) {
+                Log.d(TAG, "All of requested permissions has been granted, so run app logic directly.");
+                mustPermission = true;
+            } else {
+                // 如果还有权限为申请，而且系统版本大于23，执行申请权限逻辑
+                Log.i(TAG, "Some of requested permissions hasn't been granted, so apply permissions first.");
+                mPermissionHelper.applyPermissions();
+            }
         }
     }
 
@@ -80,44 +102,10 @@ public class BaseActivity extends AppCompatActivity{
     }
 
 
-    @TargetApi(23)
-    private void checkPermission(){
-        int hasWriteContactsPermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED) {
-            if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                MessageUtils.getInstance().showAlertDialog(this, "系统提示", "如果不赋予程序任何权限，程序将结束运行！", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                REQUEST_CODE_WRITE_EXTERNAL_STORAGE);
-                    }
-                });
-                return;
-            }
-            requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    REQUEST_CODE_WRITE_EXTERNAL_STORAGE);
-            return;
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_WRITE_EXTERNAL_STORAGE:
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission Granted
-                    //queryTradeHistory(mCode,mDate);
-                    MessageUtils.getInstance().showSnackbar(JBPApplication.getInstance().getRootView(BaseActivity.this),"受权成功，尽情享用！");
-                } else {
-                    // Permission Denied
-                    MessageUtils.getInstance().closeProgressDialog();
-                    JBPApplication.getInstance().exit();
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mPermissionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override

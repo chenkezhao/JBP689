@@ -66,7 +66,7 @@ public class CommonUtils {
 			@Override
 			public void onError(Throwable ex, boolean isOnCallback) {
 				ex.printStackTrace();
-				Toast.makeText(JBPApplication.getInstance(), "下载失败，请检查网络和SD卡"+ex.toString(), Toast.LENGTH_LONG).show();
+				Toast.makeText(JBPApplication.getInstance(), "下载失败，请检查网络和SD卡或者是否给予了存储空间权限"+ex.toString(), Toast.LENGTH_LONG).show();
 				MessageUtils.getInstance().closeProgressDialog();
                 EventBus.getDefault().post(null);
 			}
